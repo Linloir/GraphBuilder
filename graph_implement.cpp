@@ -482,7 +482,7 @@ void AMLGraph::DelVex(int vexID){
             AMLArc *nextArc = preArc->nextOutArc;
             while(nextArc != nullptr){
                 if(nextArc->inVexID == vexID || nextArc->outVexID == vexID){
-                    if(preArc->outVexID == i){
+                    if(preArc->outVexID == i || preArc->outVexID == -i){
                         if(nextArc->outVexID == i){
                             preArc->nextOutArc = nextArc->nextOutArc;
                             nextArc->nextOutArc = nullptr;
@@ -506,20 +506,52 @@ void AMLGraph::DelVex(int vexID){
                             delete nextArc;
                         }
                     }
-                    nextArc = preArc->outVexID == i ? preArc->nextOutArc : preArc->nextInArc;
+                    nextArc = (preArc->outVexID == i || preArc->outVexID == -i) ? preArc->nextOutArc : preArc->nextInArc;
                     continue;
                 }
-                preArc = nextArc;
-                nextArc = preArc->outVexID == i ? preArc->nextOutArc : preArc->nextInArc;
                 if(preArc->inVexID > vexID)
                     preArc->inVexID = - preArc->inVexID;
                 else if(preArc->inVexID < 0)
-                    preArc->inVexID = - preArc->inVexID;
+                    preArc->inVexID = - preArc->inVexID - 1;
                 if(preArc->outVexID > vexID)
                     preArc->outVexID = - preArc->outVexID;
                 else if(preArc->outVexID < 0)
-                    preArc->outVexID = - preArc->outVexID;
+                    preArc->outVexID = - preArc->outVexID - 1;
+                preArc = nextArc;
+                nextArc = (preArc->outVexID == i || preArc->outVexID == -i) ? preArc->nextOutArc : preArc->nextInArc;
+
+                /********************************************************************************************/
+                //Issue #1
+                /*How this causes issue:
+                 *   Example： when vexID is 1
+                 *   preArc = nextArc => preArc: -3 -> -2
+                 *   nextArc = ... => nextArc : 3 -> 1
+                 *   Adjust pre Arc to => preArc: 2 -> 1
+                 *   In next loop: nextArc->inVexID == 1 => judge if preArc->nextOutArc == 3 (in fact it is)
+                 *   preArc->nextOutArc != 3 -> wrongly connect next out arc of 3 -> 1 to next out arc of 2 -> 1
+                 *   which leads to wrong operations
+                 */
+
+                //if(preArc->inVexID > vexID)
+                //    preArc->inVexID = - preArc->inVexID;
+                //else if(preArc->inVexID < 0)
+                //    preArc->inVexID = - preArc->inVexID - 1;
+                //if(preArc->outVexID > vexID)
+                //    preArc->outVexID = - preArc->outVexID;
+                //else if(preArc->outVexID < 0)
+                //    preArc->outVexID = - preArc->outVexID - 1;
+
+                /********************************************************************************************/
+
             }
+            if(preArc->inVexID > vexID)
+                preArc->inVexID = - preArc->inVexID;
+            else if(preArc->inVexID < 0)
+                preArc->inVexID = - preArc->inVexID - 1;
+            if(preArc->outVexID > vexID)
+                preArc->outVexID = - preArc->outVexID;
+            else if(preArc->outVexID < 0)
+                preArc->outVexID = - preArc->outVexID - 1;
             outVexList[i].firstArc = dummyHead->nextOutArc;
             delete dummyHead;
         }

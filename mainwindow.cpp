@@ -49,17 +49,21 @@ void MainWindow::Init(){
     border->show();
     /*****************************************************************/
 
-    /* Create settings page */
+    /* Create about page */
     defaultSettingsPage = new SlidePage(cornerRadius, "ABOUT", ui->mainWidget);
     textInputItem *version = new textInputItem("version", defaultSettingsPage);
-    version->setValue("1.0");
+    version->setValue("1.1 beta");
     version->setEnabled(false);
     textInputItem *updateDate = new textInputItem("last-upd", defaultSettingsPage);
-    updateDate->setValue("2021/12/4");
+    updateDate->setValue("2021/12/5");
     updateDate->setEnabled(false);
     textInputItem *Author = new textInputItem("author", defaultSettingsPage);
     Author->setValue("Linloir | Made with love");
     Author->setEnabled(false);
+    textInputItem *GitHub = new textInputItem("git", defaultSettingsPage);
+    GitHub->setValue("github.com/Linloir");
+    GitHub->setEnabled(false);
+    defaultSettingsPage->AddContent(GitHub);
     defaultSettingsPage->AddContent(Author);
     defaultSettingsPage->AddContent(updateDate);
     defaultSettingsPage->AddContent(version);

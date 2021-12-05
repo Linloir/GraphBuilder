@@ -456,7 +456,7 @@ bigIconButton::bigIconButton(const QString &iconPath, const QString &description
     bgWidget = new QWidget(this);
     bgWidget->resize(this->size());
     radiusStyle = QString::asprintf("border-radius:%dpx;", cornerRadius);
-    bgWidget->setStyleSheet(radiusStyle + "background-color:#00000000");
+    bgWidget->setStyleSheet(radiusStyle + "background-color:#04000000");
     bgWidget->lower();
     bgWidget->show();
 
@@ -479,8 +479,8 @@ void bigIconButton::resizeEvent(QResizeEvent *event){
         indicator->move(this->width() * 0.45, this->height() - 21);
     }
     else{
-        indicator->resize(this->width() * 0.4, 6);
-        indicator->move(this->width() * 0.3, this->height() - 21);
+        indicator->resize(this->width() * 0.1, 6);
+        indicator->move(this->width() * 0.45, this->height() - 21);
     }
 }
 
@@ -497,7 +497,7 @@ void bigIconButton::enterEvent(QEnterEvent *event){
 }
 
 void bigIconButton::leaveEvent(QEvent *event){
-    bgWidget->setStyleSheet(radiusStyle + "background-color:#00000000");
+    bgWidget->setStyleSheet(radiusStyle + "background-color:#04000000");
     QPropertyAnimation *shorter = new QPropertyAnimation(indicator, "geometry", this);
     shorter->setStartValue(indicator->geometry());
     if(!onSelected)
