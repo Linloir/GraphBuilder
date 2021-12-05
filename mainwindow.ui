@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>650</height>
+   </rect>
+  </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="mouseTracking">
+    <bool>true</bool>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="leftMargin">
+       <number>30</number>
+      </property>
+      <property name="topMargin">
+       <number>30</number>
+      </property>
+      <property name="rightMargin">
+       <number>30</number>
+      </property>
+      <property name="bottomMargin">
+       <number>30</number>
+      </property>
+      <item>
+       <widget class="QWidget" name="mainWidget" native="true">
+        <property name="mouseTracking">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="mainLayout">
+           <property name="spacing">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QWidget" name="titleBar" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="mouseTracking">
+              <bool>true</bool>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout">
+                <property name="spacing">
+                 <number>13</number>
+                </property>
+                <property name="topMargin">
+                 <number>15</number>
+                </property>
+                <property name="rightMargin">
+                 <number>20</number>
+                </property>
+                <item>
+                 <spacer name="horizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="minimumBtn">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>12</width>
+                    <height>12</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>12</width>
+                    <height>12</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton{background-color:#c2c2c2;border-radius:6px}
+QPushButton:hover {background-color:#f9bf45;border-radius:6px;}
+QPushButton:pressed {background-color:#ffb11b;border-radius:6px;}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="adjSizeBtn">
+                  <property name="minimumSize">
+                   <size>
+                    <width>12</width>
+                    <height>12</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>12</width>
+                    <height>12</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton{background-color:#c2c2c2;border-radius:6px}
+QPushButton:hover {background-color:#227d51;border-radius:6px;}
+QPushButton:pressed {background-color:#2d6d4b;border-radius:6px;}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="closeBtn">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>12</width>
+                    <height>12</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>12</width>
+                    <height>12</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton{background-color:#c2c2c2;border-radius:6px}
+QPushButton:hover {background-color:#cb4042;border-radius:6px;}
+QPushButton:pressed {background-color:#ab3b3a;border-radius:6px;}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="mainDisplayWidget" native="true">
+             <property name="mouseTracking">
+              <bool>true</bool>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <layout class="QVBoxLayout" name="displayLayout">
+                <property name="leftMargin">
+                 <number>30</number>
+                </property>
+                <property name="topMargin">
+                 <number>15</number>
+                </property>
+                <property name="rightMargin">
+                 <number>30</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>30</number>
+                </property>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>minimumBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showMinimized()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>688</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>closeBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
