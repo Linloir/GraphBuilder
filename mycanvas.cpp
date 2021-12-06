@@ -89,6 +89,14 @@ void MyCanvas::CreateSettings(int radius){
         view->setType(id == 0 ? MyGraphicsView::DG : MyGraphicsView::UDG);
         type = id == 0 ? DG : UDG;
     });
+    singleSelectGroup *dfsSetting = new singleSelectGroup("Traverse Mode", this);
+    selectionItem *setGenerateTree = new selectionItem("Tree", "Generate tree", this);
+    selectionItem *setGenerateForest = new selectionItem("Forest", "Generate forest", this);
+    dfsSetting->AddItem(setGenerateTree);
+    dfsSetting->AddItem(setGenerateForest);
+    connect(dfsSetting, &singleSelectGroup::selectedItemChange, this, [=](int id){
+        generateForest = id == 1;
+    });
     QWidget *whiteSpace = new QWidget(this);
     whiteSpace->setFixedHeight(30);
     horizontalValueAdjuster *aniSpeed = new horizontalValueAdjuster("Animation speed", 0.1, 20, 0.1, this);
@@ -110,6 +118,7 @@ void MyCanvas::CreateSettings(int radius){
     connect(delBtn, &textButton::clicked, this, [=](){emit setDel(this);});
     settings->AddContent(delBtn);
     settings->AddContent(saveBtn);
+    settings->AddContent(dfsSetting);
     settings->AddContent(dirSetting);
     settings->AddContent(structureSetting);
     settings->AddContent(aniSpeed);
@@ -353,19 +362,22 @@ void MyCanvas::Init(){
         viewLog *newLog = new viewLog("[BFS] | --- BFS start ---");
         newLog->setStyleSheet("color:#0078d4");
         logDisplay->addWidget(newLog);
-        bfs();
+        g->BFS(view->selectedVex(), generateForest);
+        view->hasVisitedItem = true;
     });
     connect(startDfs, &textButton::clicked, this, [=](){
         viewLog *newLog = new viewLog("[DFS] | --- DFS start ---");
         newLog->setStyleSheet("color:#0078d4");
         logDisplay->addWidget(newLog);
-        dfs();
+        g->DFS(view->selectedVex(), generateForest);
+        view->hasVisitedItem = true;
     });
     connect(startDij, &textButton::clicked, this, [=](){
         viewLog *newLog = new viewLog("[Dij] | --- Dijkstra start ---");
         newLog->setStyleSheet("color:#0078d4");
         logDisplay->addWidget(newLog);
-        dijkstra();
+        g->Dijkstra(view->selectedVex());
+        view->hasVisitedItem = true;
         if(g->GetInfoOf(view->selectedVex())->strtVexInfo == nullptr){
             dijStart->setValue("Run dijkstra first");
             dijPrev->setValue("Run dijkstra first");
@@ -428,35 +440,4 @@ void MyCanvas::addVex(MyGraphicsVexItem *vex){
 
 void MyCanvas::addArc(MyGraphicsLineItem *arc){
     g->AddArc(arc);
-}
-
-void MyCanvas::dfs(){
-    MyGraphicsVexItem *strtVex = view->selectedVex();
-    if(strtVex != nullptr){
-        g->DFS(strtVex);
-        view->hasVisitedItem = true;
-    }
-}
-
-void MyCanvas::bfs(){
-    MyGraphicsVexItem *strtVex = view->selectedVex();
-    if(strtVex != nullptr){
-        g->BFS(strtVex);
-        view->hasVisitedItem = true;
-    }
-}
-
-void MyCanvas::dijkstra(){
-    MyGraphicsVexItem *strtVex = view->selectedVex();
-    if(strtVex){
-        g->Dijkstra(strtVex);
-        view->hasVisitedItem = true;
-    }
-}
-
-void MyCanvas::setWeight(int w){
-    MyGraphicsLineItem *arc = view->selectedArc();
-    if(arc){
-        g->SetWeight(arc, w);
-    }
 }

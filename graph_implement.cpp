@@ -230,7 +230,7 @@ void ALGraph::ResetDistance(){
     }
 }
 
-void ALGraph::DFS(int strtID){
+void ALGraph::DFS(int strtID, bool generateForest){
     if(strtID == -1)
         return;
     vector<int> awaitVexList;
@@ -254,9 +254,35 @@ void ALGraph::DFS(int strtID){
             nextArc->visit();
         vexList[nextVex].visit();
     }
+    if(generateForest){
+        for(int i = 0; i < vexList.size(); i++){
+            if(vexList[i].visited)  continue;
+            awaitVexList.clear();
+            awaitArcList.clear();
+            awaitVexList.push_back(i);
+            while(awaitVexList.size() > 0){
+                int nextVex = awaitVexList.back();
+                ALArc *nextArc = awaitArcList.size() > 0 ? awaitArcList.back() : nullptr;
+                awaitVexList.pop_back();
+                if(nextArc)
+                    awaitArcList.pop_back();
+                for(ALArc *p = vexList[nextVex].firstArc; p != nullptr; p = p->nextArc){
+                    if(vexList[p->eVexID].visited == false){
+                        awaitVexList.push_back(p->eVexID);
+                        awaitArcList.push_back(p);
+                        if(type == UDG && GetIdOf(p->gArc->edVex()) != p->eVexID)
+                            p->gArc->reverseDirection();
+                    }
+                }
+                if(nextArc && !vexList[nextArc->eVexID].visited)
+                    nextArc->visit();
+                vexList[nextVex].visit();
+            }
+        }
+    }
 }
 
-void ALGraph::BFS(int strtID){
+void ALGraph::BFS(int strtID, bool generateForest){
     if(strtID == -1)
         return;
     vector<int> awaitVexList;
@@ -279,6 +305,32 @@ void ALGraph::BFS(int strtID){
         if(nextArc && !vexList[nextArc->eVexID].visited)
             nextArc->visit();
         vexList[nextVex].visit();
+    }
+    if(generateForest){
+        for(int i = 0; i < vexList.size(); i++){
+            if(vexList[i].visited)  continue;
+            awaitVexList.clear();
+            awaitArcList.clear();
+            awaitVexList.push_back(i);
+            while(awaitVexList.size() > 0){
+                int nextVex = awaitVexList[0];
+                ALArc *nextArc = awaitArcList.size() > 0 ? awaitArcList[0] : nullptr;
+                awaitVexList.erase(awaitVexList.begin());
+                if(nextArc)
+                    awaitArcList.erase(awaitArcList.begin());
+                for(ALArc *p = vexList[nextVex].firstArc; p != nullptr; p = p->nextArc){
+                    if(vexList[p->eVexID].visited == false){
+                        awaitVexList.push_back(p->eVexID);
+                        awaitArcList.push_back(p);
+                        if(type == UDG && GetIdOf(p->gArc->edVex()) != p->eVexID)
+                            p->gArc->reverseDirection();
+                    }
+                }
+                if(nextArc && !vexList[nextArc->eVexID].visited)
+                    nextArc->visit();
+                vexList[nextVex].visit();
+            }
+        }
     }
 }
 
@@ -795,7 +847,7 @@ void AMLGraph::ResetDistance(){
         }
 }
 
-void AMLGraph::DFS(int strtID){
+void AMLGraph::DFS(int strtID, bool generateForest){
     if(strtID == -1)
         return;
     vector<int> awaitVexList;
@@ -820,9 +872,36 @@ void AMLGraph::DFS(int strtID){
             nextArc->visit();
         outVexList[nextVex].visit();
     }
+    if(generateForest){
+        for(int i = 0; i < outVexList.size(); i++){
+            if(outVexList[i].visited)   continue;
+            awaitVexList.clear();
+            awaitArcList.clear();
+            awaitVexList.push_back(i);
+            while(awaitVexList.size() > 0){
+                int nextVex = awaitVexList.back();
+                AMLArc *nextArc = awaitArcList.size() > 0 ? awaitArcList.back() : nullptr;
+                awaitVexList.pop_back();
+                if(nextArc)
+                    awaitArcList.pop_back();
+                for(AMLArc *p = outVexList[nextVex].firstArc; p != nullptr; p = p->outVexID == strtID ? p->nextOutArc : p->nextInArc){
+                    int endID = p->outVexID == nextVex ? p->inVexID : p->outVexID;
+                    if(outVexList[endID].visited == false){
+                        awaitVexList.push_back(endID);
+                        awaitArcList.push_back(p);
+                        if(type == UDG && GetIdOf(p->gArc->edVex()) != endID)
+                            p->gArc->reverseDirection();
+                    }
+                }
+                if(nextArc && !outVexList[nextVex].visited)
+                    nextArc->visit();
+                outVexList[nextVex].visit();
+            }
+        }
+    }
 }
 
-void AMLGraph::BFS(int strtID){
+void AMLGraph::BFS(int strtID, bool generateForest){
     if(strtID == -1)
         return;
     vector<int> awaitVexList;
@@ -846,6 +925,33 @@ void AMLGraph::BFS(int strtID){
         if(nextArc && !outVexList[nextVex].visited)
             nextArc->visit();
         outVexList[nextVex].visit();
+    }
+    if(generateForest){
+        for(int i = 0; i < outVexList.size(); i++){
+            if(outVexList[i].visited)   continue;
+            awaitVexList.clear();
+            awaitArcList.clear();
+            awaitVexList.push_back(i);
+            while(awaitVexList.size() > 0){
+                int nextVex = awaitVexList[0];
+                AMLArc *nextArc = awaitArcList.size() > 0 ? awaitArcList[0] : nullptr;
+                awaitVexList.erase(awaitVexList.begin());
+                if(nextArc)
+                    awaitArcList.erase(awaitArcList.begin());
+                for(AMLArc *p = outVexList[nextVex].firstArc; p != nullptr; p = p->outVexID == strtID ? p->nextOutArc : p->nextInArc){
+                    int endID = p->outVexID == nextVex ? p->inVexID : p->outVexID;
+                    if(outVexList[endID].visited == false){
+                        awaitVexList.push_back(endID);
+                        awaitArcList.push_back(p);
+                        if(type == UDG && GetIdOf(p->gArc->edVex()) != endID)
+                            p->gArc->reverseDirection();
+                    }
+                }
+                if(nextArc && !outVexList[nextVex].visited)
+                    nextArc->visit();
+                outVexList[nextVex].visit();
+            }
+        }
     }
 }
 

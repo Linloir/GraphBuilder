@@ -50,10 +50,10 @@ public:
     /* Other Function */
     virtual void ClearVisit() = 0;
     virtual void ResetDistance() = 0;
-    virtual void DFS(int strtID) = 0;
-    virtual void DFS(MyGraphicsVexItem *strtVex) = 0;
-    virtual void BFS(int strtID) = 0;
-    virtual void BFS(MyGraphicsVexItem *strtVex) = 0;
+    virtual void DFS(int strtID, bool generateForest = false) = 0;
+    virtual void DFS(MyGraphicsVexItem *strtVex, bool generateForest = false) = 0;
+    virtual void BFS(int strtID, bool generateForest = false) = 0;
+    virtual void BFS(MyGraphicsVexItem *strtVex, bool generateForest = false) = 0;
     virtual void Dijkstra(int strtID) = 0;
     virtual void Dijkstra(MyGraphicsVexItem *strtVex) = 0;
 
@@ -127,10 +127,10 @@ public:
     /* Other Function */
     void ClearVisit();
     void ResetDistance();
-    void DFS(int strtID);
-    void DFS(MyGraphicsVexItem *strtVex){DFS(GetIdOf(strtVex));}
-    void BFS(int strtID);
-    void BFS(MyGraphicsVexItem *strtVex){BFS(GetIdOf(strtVex));}
+    void DFS(int strtID, bool generateForest = false);
+    void DFS(MyGraphicsVexItem *strtVex, bool generateForest = false){DFS(GetIdOf(strtVex), generateForest);}
+    void BFS(int strtID, bool generateForest = false);
+    void BFS(MyGraphicsVexItem *strtVex, bool generateForest = false){BFS(GetIdOf(strtVex), generateForest);}
     void Dijkstra(int strtID);
     void Dijkstra(MyGraphicsVexItem *strtVex){Dijkstra(GetIdOf(strtVex));}
     AMLGraph* ConvertToAML();
@@ -202,10 +202,10 @@ public:
     /* Other Function */
     void ClearVisit();
     void ResetDistance();
-    void DFS(int strtID);
-    void DFS(MyGraphicsVexItem *strtVex){DFS(GetIdOf(strtVex));}
-    void BFS(int strtID);
-    void BFS(MyGraphicsVexItem *strtVex){BFS(GetIdOf(strtVex));}
+    void DFS(int strtID, bool generateForest = false);
+    void DFS(MyGraphicsVexItem *strtVex, bool generateForest = false){DFS(GetIdOf(strtVex), generateForest);}
+    void BFS(int strtID, bool generateForest = false);
+    void BFS(MyGraphicsVexItem *strtVex, bool generateForest = false){BFS(GetIdOf(strtVex), generateForest);}
     void Dijkstra(int strtID);
     void Dijkstra(MyGraphicsVexItem *strtVex){Dijkstra(GetIdOf(strtVex));}
     ALGraph* ConvertToAL();

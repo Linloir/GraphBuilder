@@ -25,6 +25,7 @@ private:
     AbstractGraph *g;
     int structure_type;
     int type;
+    bool generateForest = false;
 
     void CreateSettings(int r);
     void Init();
@@ -48,13 +49,6 @@ signals:
 private slots:
     void addVex(MyGraphicsVexItem*);
     void addArc(MyGraphicsLineItem*);
-    //void delVex(MyGraphicsVexItem*);
-    //void delArc(MyGraphicsLineItem*);
-    void dfs();
-    void bfs();
-    void dijkstra();
-    void setWeight(int w);
-    void setAniRate(int step){view->setAniRate(step / 100.0);}
 
 };
 
