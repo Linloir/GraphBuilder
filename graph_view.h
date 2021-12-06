@@ -126,6 +126,8 @@ public:
 
     void RemoveVex(MyGraphicsVexItem *vex);
     void RemoveArc(MyGraphicsLineItem *line);
+    void HideUnvisited();
+    void ShowUnvisited();
 
     void setAniRate(qreal rate){speedRate = rate;}
     void setType(int _type){type = _type;}
@@ -185,7 +187,7 @@ private:
     static unsigned int internalID;
     QBrush regBrush = QBrush(QColor(58, 143, 192));
     QBrush selBrush = QBrush(QColor(208, 90, 110));
-    QBrush visitedBrush = QBrush(QColor(93, 172, 129));
+    QBrush visitedBrush = QBrush(QColor(0, 137, 108));
     QBrush accessBrush = QBrush(QColor(152, 109, 178));
 
     QPointF center;
@@ -227,6 +229,8 @@ public:
     void select();
     void visit(bool visited = true);
     void access(const QString &hint = "", bool isAccess = true);
+    void itemHide();
+    void itemShow();
     QString Text(){return nameText;}
     void setText(const QString & text){nameTag->setText(text);nameText = text;}
     void addStartLine(MyGraphicsLineItem *line){linesStartWith.push_back(line);}
@@ -237,6 +241,7 @@ public:
 
     bool equalTo(MyGraphicsVexItem *v){return id == v->id;}
     int type() const override {return Type;}
+    bool isVisited(){return state & ON_VISIT;}
     qreal getRadius() {return radius;}
     QString getData(){return QString::asprintf("%g %g %g\n", center.x(), center.y(), radius)+nameText;}
 
@@ -295,7 +300,7 @@ private:
     QColor defaultColor = QColor(125, 185, 222);
     QColor hoverColor = QColor(0, 98, 132);
     QColor selColor = QColor(208, 90, 110);
-    QColor visitColor = QColor(93, 172, 129);
+    QColor visitColor = QColor(0, 137, 108);
     QColor accessColor = QColor(178, 143, 206);
     QPen defaultPen;
     QPen curPen;
@@ -345,11 +350,14 @@ public:
     MyGraphicsVexItem* edVex(){return endVex;}
     QString weightText(){return text;}
 
-    void visit(bool visited = true);
+    void visit(bool visit = true);
+    void itemHide();
+    void itemShow();
     void remove();
     void access();
 
     int type() const override {return Type;}
+    bool isVisited(){return state & ON_VISIT;}
 
 signals:
     void setHover(bool in = true);

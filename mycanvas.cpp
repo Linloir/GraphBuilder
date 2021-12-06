@@ -108,6 +108,12 @@ void MyCanvas::CreateSettings(int radius){
     textInputItem *redesc = new textInputItem("Detail", this);
     redesc->setValue(canvasDescription);
     connect(redesc, &textInputItem::textEdited, this, [=](QString text){canvasDescription = text; emit descChanged(text);});
+    textButton *hideBtn = new textButton("Hide Unvisited Items", this);
+    connect(hideBtn, &textButton::clicked, this, [=](){view->HideUnvisited();});
+    textButton *showBtn = new textButton("Show Unvisited Items", this);
+    connect(showBtn, &textButton::clicked, this, [=](){view->ShowUnvisited();});
+    QWidget *whiteSpace2 = new QWidget(this);
+    whiteSpace2->setFixedHeight(30);
     textButton *saveBtn = new textButton("Save to file", this);
     connect(saveBtn, &textButton::clicked, this, [=](){
         QString savePath = QFileDialog::getSaveFileName(this, tr("Save map"), " ", tr("Map file(*.map)"));
@@ -118,6 +124,9 @@ void MyCanvas::CreateSettings(int radius){
     connect(delBtn, &textButton::clicked, this, [=](){emit setDel(this);});
     settings->AddContent(delBtn);
     settings->AddContent(saveBtn);
+    settings->AddContent(whiteSpace2);
+    settings->AddContent(showBtn);
+    settings->AddContent(hideBtn);
     settings->AddContent(dfsSetting);
     settings->AddContent(dirSetting);
     settings->AddContent(structureSetting);

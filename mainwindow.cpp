@@ -52,18 +52,22 @@ void MainWindow::Init(){
     /* Create about page */
     defaultSettingsPage = new SlidePage(cornerRadius, "ABOUT", ui->mainWidget);
     textInputItem *version = new textInputItem("version", defaultSettingsPage);
-    version->setValue("1.2-beta");
+    version->setValue("1.3-beta");
     version->setEnabled(false);
     textInputItem *updateDate = new textInputItem("last-upd", defaultSettingsPage);
-    updateDate->setValue("2021/12/6");
+    updateDate->setValue("2021/12/6 10:14");
     updateDate->setEnabled(false);
     textInputItem *Author = new textInputItem("author", defaultSettingsPage);
     Author->setValue("Linloir | Made with love");
     Author->setEnabled(false);
+    textInputItem *lic = new textInputItem("lic", defaultSettingsPage);
+    lic->setValue("MIT License");
+    lic->setEnabled(false);
     textInputItem *GitHub = new textInputItem("git", defaultSettingsPage);
     GitHub->setValue("github.com/Linloir");
     GitHub->setEnabled(false);
     defaultSettingsPage->AddContent(GitHub);
+    defaultSettingsPage->AddContent(lic);
     defaultSettingsPage->AddContent(Author);
     defaultSettingsPage->AddContent(updateDate);
     defaultSettingsPage->AddContent(version);

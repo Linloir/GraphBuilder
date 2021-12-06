@@ -241,6 +241,26 @@ void MyGraphicsView::RemoveArc(MyGraphicsLineItem *line){
     line->remove();
 }
 
+void MyGraphicsView::HideUnvisited(){
+    for(int i = 0; i < vexes.size(); i++){
+        if(!vexes[i]->isVisited())
+            vexes[i]->itemHide();
+    }
+    for(int i = 0; i < lines.size(); i++){
+        if(!lines[i]->isVisited())
+            lines[i]->itemHide();
+    }
+}
+
+void MyGraphicsView::ShowUnvisited(){
+    for(int i = 0; i < vexes.size(); i++){
+        vexes[i]->itemShow();
+    }
+    for(int i = 0; i < lines.size(); i++){
+        lines[i]->itemShow();
+    }
+}
+
 void MyGraphicsView::SaveToFile(QTextStream &ts){
     //vexes
     ts << vexes.size() << "\n";
@@ -487,12 +507,16 @@ void MyGraphicsVexItem::visit(bool visited){
             }
         });
         connect(visitEffect, &QTimeLine::stateChanged, this, [=](){
-            if(visitEffect->state() == QTimeLine::Running)
+            if(visitEffect->state() == QTimeLine::Running){
+                itemShow();
+                this->state |= ON_VISIT;
                 emit logAdded(new viewLog("[Vex] | \""+nameText+"\" set visited"));
+            }
         });
         emit addAnimation(visitEffect);
     }
     else{
+        state &= ~ON_VISIT;
         if(state & ON_SELECTED){
             this->setBrush(selBrush);
             if(tag)
@@ -504,6 +528,38 @@ void MyGraphicsVexItem::visit(bool visited){
                 tag->setBrush(regBrush);
         }
     }
+}
+
+void MyGraphicsVexItem::itemHide(){
+    nameTag->setBrush(QColor(0, 0, 0, 0));
+    if(tag){
+        QBrush brush = tag->brush();
+        QColor color = brush.color();
+        color.setAlpha(0);
+        brush.setColor(color);
+        tag->setBrush(brush);
+    }
+    QBrush brush = this->brush();
+    QColor color = brush.color();
+    color.setAlpha(0);
+    brush.setColor(color);
+    this->setBrush(brush);
+}
+
+void MyGraphicsVexItem::itemShow(){
+    nameTag->setBrush(QColor(0, 0, 0));
+    if(tag){
+        QBrush brush = tag->brush();
+        QColor color = brush.color();
+        color.setAlpha(255);
+        brush.setColor(color);
+        tag->setBrush(brush);
+    }
+    QBrush brush = this->brush();
+    QColor color = brush.color();
+    color.setAlpha(255);
+    brush.setColor(color);
+    this->setBrush(brush);
 }
 
 void MyGraphicsVexItem::access(const QString &hint, bool isAccess){
@@ -540,8 +596,10 @@ void MyGraphicsVexItem::access(const QString &hint, bool isAccess){
             }
         });
         connect(accessEffect, &QTimeLine::stateChanged, this, [=](){
-            if(accessEffect->state() == QTimeLine::Running)
+            if(accessEffect->state() == QTimeLine::Running){
+                itemShow();
                 emit logAdded(new viewLog("[Vex] | \""+nameText+"\" accessed with hint "+hint));
+            }
         });
         emit addAnimation(accessEffect);
     }
@@ -602,6 +660,7 @@ void MyGraphicsVexItem::onLeftClick(QPointF position){
         return;
     if(state & (ON_LEFT_CLICK | ON_RIGHT_CLICK))
         return;
+    itemShow();
     if(this->contains(position)){
         emit selected(this);
         state |= ON_LEFT_CLICK;
@@ -629,6 +688,7 @@ void MyGraphicsVexItem::onRightClick(QPointF position){
         return;
     if(state & (ON_LEFT_CLICK | ON_RIGHT_CLICK))
         return;
+    itemShow();
     if(this->contains(position)){
         emit selected(this);
         state |= ON_RIGHT_CLICK;
@@ -920,6 +980,7 @@ void MyGraphicsLineItem::onLeftClick(QPointF position){
         return;
     if(state & ON_VISIT)
         visit(false);
+    itemShow();
     if(this->contains(position)){
         emit selected(this);
         onClickEffect();
@@ -946,6 +1007,7 @@ void MyGraphicsLineItem::onRightClick(QPointF position){
         return;
     if(state & ON_VISIT)
         visit(false);
+    itemShow();
     if(this->contains(position)){
         emit selected(this);
         onClickEffect();
@@ -981,9 +1043,9 @@ void MyGraphicsLineItem::onMouseRelease(){
     }
 }
 
-void MyGraphicsLineItem::visit(bool visited){
-    if(visited){
-        state |= ON_VISIT;
+void MyGraphicsLineItem::visit(bool visit){
+    if(visit){
+        //state |= ON_VISIT;
         QTimeLine *visitEffect = new QTimeLine;
         visitEffect->setDuration(1000);
         visitEffect->setFrameRange(0, 200);
@@ -1005,6 +1067,7 @@ void MyGraphicsLineItem::visit(bool visited){
                     newLine2->setZValue(this->zValue() - 2);
                     scene()->addItem(newLine2);
                 }
+                this->state |= ON_VISIT;
                 emit logAdded(new viewLog("[Arc] | Arc \""+startVex->Text()+"\" -> \""+endVex->Text()+"\" set visited"));
             }
             else{
@@ -1025,6 +1088,68 @@ void MyGraphicsLineItem::visit(bool visited){
         state &= ~ON_VISIT;
         curPen = defaultPen;
         refrshLine();
+    }
+}
+
+void MyGraphicsLineItem::itemHide(){
+    if(line1){
+        QPen pen = line1->pen();
+        QColor color = pen.color();
+        color.setAlpha(0);
+        pen.setColor(color);
+        line1->setPen(pen);
+    }
+    if(line2){
+        QPen pen = line2->pen();
+        QColor color = pen.color();
+        color.setAlpha(0);
+        pen.setColor(color);
+        line2->setPen(pen);
+    }
+    if(arrow){
+        QPen pen = arrow->pen();
+        QColor color = pen.color();
+        color.setAlpha(0);
+        pen.setColor(color);
+        arrow->setPen(pen);
+    }
+    if(textItem){
+        QBrush brush = textItem->brush();
+        QColor color = brush.color();
+        color.setAlpha(0);
+        brush.setColor(color);
+        textItem->setBrush(brush);
+    }
+}
+
+void MyGraphicsLineItem::itemShow(){
+    if(line1){
+        QPen pen = line1->pen();
+        QColor color = pen.color();
+        color.setAlpha(255);
+        pen.setColor(color);
+        line1->setPen(pen);
+    }
+    if(line2){
+        QPen pen = line2->pen();
+        QColor color = pen.color();
+        color.setAlpha(255);
+        pen.setColor(color);
+        line2->setPen(pen);
+    }
+    if(arrow){
+        QPen pen = arrow->pen();
+        QColor color = pen.color();
+        color.setAlpha(255);
+        pen.setColor(color);
+        arrow->setPen(pen);
+    }
+    if(textItem){
+        QBrush brush = textItem->brush();
+        QColor color = brush.color();
+        color.setAlpha(255);
+        brush.setColor(color);
+        textItem->setBrush(brush);
     }
 }
 
