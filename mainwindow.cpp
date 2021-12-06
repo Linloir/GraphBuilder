@@ -52,10 +52,10 @@ void MainWindow::Init(){
     /* Create about page */
     defaultSettingsPage = new SlidePage(cornerRadius, "ABOUT", ui->mainWidget);
     textInputItem *version = new textInputItem("version", defaultSettingsPage);
-    version->setValue("1.1 beta");
+    version->setValue("1.2-beta");
     version->setEnabled(false);
     textInputItem *updateDate = new textInputItem("last-upd", defaultSettingsPage);
-    updateDate->setValue("2021/12/5");
+    updateDate->setValue("2021/12/6");
     updateDate->setEnabled(false);
     textInputItem *Author = new textInputItem("author", defaultSettingsPage);
     Author->setValue("Linloir | Made with love");
@@ -356,15 +356,9 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event){
     else{
         if(mouseState == 0){
             if(maximized){
-                qDebug() << event->pos() << ui->mainWidget->width();
                 qreal wRatio = (double)event->pos().x() / (double)ui->mainWidget->width();
-                qDebug() << wRatio;
                 controlWindowScale();
-                qDebug() << ui->mainWidget->width();
-                qDebug() << QPoint(event->globalPosition().x() - ui->mainWidget->width() * wRatio, event->globalPosition().y());
-                qDebug() << this->frameGeometry().topLeft();
                 this->move(QPoint(event->globalPosition().x() - ui->mainWidget->width() * wRatio, -30));
-                qDebug() << this->frameGeometry().topLeft();
                 lastPos = QPoint(ui->mainWidget->width() * wRatio, event->pos().y());
             }
             else
