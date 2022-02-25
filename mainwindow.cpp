@@ -11,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->centralwidget->setMouseTracking(true);
+#ifdef Q_OS_LINUX
+    ui->verticalLayout->setContentsMargins(0, 0, 0, 0);
+    cornerRadius = 0;
+#endif
     QTimer *t = new QTimer(this);
     connect(t, &QTimer::timeout, this, [=](){Init();});
     t->setSingleShot(true);
@@ -21,8 +25,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::Init(){
     /* Create main widget and set mask, style sheet and shadow */
+#ifdef Q_OS_LINUX
+    QPainterPath path;
+    path.addRect(ui->mainWidget->rect());
+#else
     QPainterPath path;
     path.addRoundedRect(ui->mainWidget->rect(), cornerRadius - 1, cornerRadius - 1);
+#endif
     QRegion mask(path.toFillPolygon().toPolygon());
     ui->mainWidget->setMask(mask);
 
@@ -30,15 +39,19 @@ void MainWindow::Init(){
     ui->mainWidget->setObjectName("mainWidget");
     mainStyle = "QWidget#mainWidget{background-color:" + mainBackGround.name() + QString::asprintf(";border-radius:%dpx", cornerRadius) + "}";
     ui->mainWidget->setStyleSheet(mainStyle);
-
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+#ifdef Q_OS_WINDOWS
     windowShadow = new QGraphicsDropShadowEffect(this);
     windowShadow->setBlurRadius(30);
     windowShadow->setColor(QColor(0, 0, 0));
     windowShadow->setOffset(0, 0);
     ui->mainWidget->setGraphicsEffect(windowShadow);
+#endif
+#endif
     /**********************************************************/
 
     /* Create border in order to cover the zigzag edge of the region */
+#ifdef Q_OS_WINDOWS
     border = new QWidget(this);
     border->move(ui->mainWidget->pos() - QPoint(1, 1));
     border->resize(ui->mainWidget->size() + QSize(2, 2));
@@ -47,6 +60,7 @@ void MainWindow::Init(){
     border->setStyleSheet(borderStyle);
     border->setAttribute(Qt::WA_TransparentForMouseEvents);
     border->show();
+#endif
     /*****************************************************************/
 
     /* Create about page */
@@ -329,7 +343,11 @@ MainWindow::~MainWindow()
 void MainWindow::mousePressEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         mousePressed = true;
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
         lastPos = event->globalPosition().toPoint() - this->frameGeometry().topLeft();
+#else
+        lastPos = event->globalPos() - this->frameGeometry().topLeft();
+#endif
     }
 }
 
@@ -362,14 +380,26 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event){
             if(maximized){
                 qreal wRatio = (double)event->pos().x() / (double)ui->mainWidget->width();
                 controlWindowScale();
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
                 this->move(QPoint(event->globalPosition().x() - ui->mainWidget->width() * wRatio, -30));
+#else
+                this->move(QPoint(event->globalPos().x() - ui->mainWidget->width() * wRatio, -30));
+#endif
                 lastPos = QPoint(ui->mainWidget->width() * wRatio, event->pos().y());
             }
             else
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
                 this->move(event->globalPosition().toPoint() - lastPos);
+#else
+                this->move(event->globalPos() - lastPos);
+#endif
         }
         else{
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
             QPoint d = event->globalPosition().toPoint() - frameGeometry().topLeft() - lastPos;
+#else
+            QPoint d = event->globalPos() - frameGeometry().topLeft() - lastPos;
+#endif
             if(mouseState & AT_LEFT){
                 this->move(this->frameGeometry().x() + d.x(), this->frameGeometry().y());
                 this->resize(this->width() - d.x(), this->height());
@@ -385,7 +415,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event){
                 this->resize(this->width(), this->height() + d.y());
             }
         }
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
         lastPos = event->globalPosition().toPoint() - this->frameGeometry().topLeft();
+#else
+        lastPos = event->globalPos() - this->frameGeometry().topLeft();
+#endif
     }
 }
 
@@ -396,18 +430,23 @@ void MainWindow::resizeEvent(QResizeEvent *event){
 
     //Resize mask
     QPainterPath path;
+#ifdef Q_OS_WINDOWS
     path.addRoundedRect(ui->mainWidget->rect(), cornerRadius - 1, cornerRadius - 1);
+#else
+    path.addRect(ui->mainWidget->rect());
+#endif
     QRegion mask(path.toFillPolygon().toPolygon());
     ui->mainWidget->setMask(mask);
 
     //Resize all pages
     for(int i = 0; i < pageList.size(); i++){
-        pageList[i]->resize(ui->mainWidget->width() * 0.3 < pageList[i]->preferWidth ? pageList[i]->preferWidth - 1 : ui->mainWidget->width() * 0.3 - 1, ui->mainWidget->height());
+        pageList[i]->resize(ui->mainWidget->width() * 0.4 < pageList[i]->preferWidth ? pageList[i]->preferWidth - 1 : ui->mainWidget->width() * 0.4 - 1, ui->mainWidget->height());
         pageList[i]->resize(pageList[i]->width() + 1, pageList[i]->height());
     }
 }
 
 void MainWindow::controlWindowScale(){
+#ifdef Q_OS_WINDOWS
     if(!maximized){
         lastGeometry = this->frameGeometry();
         windowShadow->setEnabled(false);
@@ -437,6 +476,7 @@ void MainWindow::controlWindowScale(){
         this->move(lastGeometry.x(), lastGeometry.y());
         maximized = false;
     }
+#endif
 }
 
 MyCanvas* MainWindow::loadCanvas(const QString &path){

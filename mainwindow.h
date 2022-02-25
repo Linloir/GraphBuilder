@@ -48,7 +48,16 @@ private:
     QPoint lastPos;
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event){mousePressed = false;if(event->globalPosition().y() < 2)  controlWindowScale();}
+    void mouseReleaseEvent(QMouseEvent *event){
+        mousePressed = false;
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+        if(event->globalPosition().y() < 2)
+            controlWindowScale();
+#else
+        if(event->globalPos().y() < 2)
+            controlWindowScale();
+#endif
+    }
     void resizeEvent(QResizeEvent *event);
 
     bool maximized = false;

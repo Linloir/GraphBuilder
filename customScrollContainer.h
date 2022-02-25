@@ -13,6 +13,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QTimer>
+#include <QtMath>
 
 #define MAXSPEED 70
 

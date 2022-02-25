@@ -377,7 +377,11 @@ void ScrollIndicator::mousePressEvent(QMouseEvent *event){
     pressed = true;
     //>note: globalPos -> globalPosition here due to deprecation
     //>      may cause issues
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
     lastY = event->globalPosition().y();
+#else
+    lastY = event->globalPos().y();
+#endif
     update();
 }
 
@@ -385,11 +389,19 @@ void ScrollIndicator::mouseMoveEvent(QMouseEvent *event){
     if(pressed && !aniPause->isActive()){
         //>note: globalPos -> globalPosition here due to deprecation
         //>      may cause issues
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
         int dp = event->globalPosition().y() - lastY;
+#else
+        int dp = event->globalPos().y() - lastY;
+#endif
         emit scrollPage(dp);
         //>note: globalPos -> globalPosition here due to deprecation
         //>      may cause issues
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
         lastY = event->globalPosition().y();
+#else
+        lastY = event->globalPos().y();
+#endif
     }
 }
 

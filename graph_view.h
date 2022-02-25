@@ -10,7 +10,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QScrollBar>
-
 #include <QLabel>
 
 //Header for MyVex class
@@ -24,6 +23,10 @@
 
 #include <QTimeLine>
 #include <QEasingCurve>
+
+#if (QT_VERSION < QT_VERSION_CHECK(6,0,0))
+#include <QtMath>
+#endif
 
 class viewLog : public QLabel{
     Q_OBJECT

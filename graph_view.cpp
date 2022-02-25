@@ -1,5 +1,4 @@
 #include "graph_view.h"
-#include <QDebug>
 
 viewLog::viewLog(QString log, QWidget *parent) :
     QLabel(parent)
@@ -147,7 +146,11 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent *event){
 }
 
 void MyGraphicsView::wheelEvent(QWheelEvent *event){
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
     QPointF cursorPoint = event->position();
+#else
+    QPointF cursorPoint = event->posF();
+#endif
     QPointF scenePos = this->mapToScene(QPoint(cursorPoint.x(), cursorPoint.y()));
 
     qreal viewWidth = this->viewport()->width();

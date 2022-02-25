@@ -7,7 +7,7 @@ SlidePage::SlidePage(int radius, QString name, QWidget *parent) :
 {
     //if(parent)
     //    resize(parent->width() * 0.8 <= preferWidth ? parent->width() * 0.8 : preferWidth, parent->height());
-    resize(parent->width() * 0.3 <= preferWidth ? preferWidth : parent->width() * 0.3, parent->height());
+    resize(parent->width() * 0.4 <= preferWidth ? preferWidth : parent->width() * 0.4, parent->height());
     this->move(QPoint(-this->width() - 30, 0));
 
     pageContentContainer = new ScrollAreaCustom(this);
