@@ -7,6 +7,11 @@
 #include "graph_view.h"
 #include "graph_implement.h"
 
+#if (QT_VERSION > QT_VERSION_CHECK(6,3,0))
+#include <QFileDialog>
+#endif
+
+
 class MyCanvas : public QWidget
 {
     Q_OBJECT

@@ -15,6 +15,13 @@
 #include <QResizeEvent>
 #include <QFocusEvent>
 
+#if (QT_VERSION > QT_VERSION_CHECK(6,3,0))
+#include <QGraphicsOpacityEffect>
+#include <QLabel>
+#include <QVBoxLayout>
+#endif
+
+
 class customIcon : public QPushButton{
     Q_OBJECT
 

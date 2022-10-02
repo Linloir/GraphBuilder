@@ -5,6 +5,11 @@
 #include <QRegion>
 #include <QTimer>
 
+#if (QT_VERSION > QT_VERSION_CHECK(6,3,0))
+#include <QFileDialog>
+#endif
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
