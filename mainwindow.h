@@ -5,7 +5,7 @@
 #include <QVector>
 #include <QGraphicsDropShadowEffect>
 #include "slidepage.h"
-#include "mycanvas.h"
+#include "visual_graph/mycanvas.h"
 #include "visual_sort/mysort.h"
 
 QT_BEGIN_NAMESPACE

@@ -4,8 +4,8 @@
 #include <QWidget>
 #include <QGridLayout>
 #include "slidepage.h"
-#include "graph_view.h"
-#include "graph_implement.h"
+#include "visual_graph/graph_view.h"
+#include "visual_graph/graph_implement.h"
 
 #if (QT_VERSION > QT_VERSION_CHECK(6,3,0))
 #include <QFileDialog>

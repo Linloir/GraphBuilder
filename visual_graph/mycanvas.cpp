@@ -1,4 +1,4 @@
-#include "mycanvas.h"
+#include "visual_graph/mycanvas.h"
 
 MyCanvas::MyCanvas(int radius, QString name, QString desc, int structure, int _type, QWidget *parent) :
     QWidget(parent),

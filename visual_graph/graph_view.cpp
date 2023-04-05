@@ -1,4 +1,4 @@
-#include "graph_view.h"
+#include "visual_graph/graph_view.h"
 
 viewLog::viewLog(QString log, QWidget *parent) :
     QLabel(parent)

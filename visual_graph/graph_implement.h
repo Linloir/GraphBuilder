@@ -1,7 +1,7 @@
 #ifndef GRAPH_IMPLEMENT_H
 #define GRAPH_IMPLEMENT_H
 
-#include "graph_view.h"
+#include "visual_graph/graph_view.h"
 
 using namespace std;
 

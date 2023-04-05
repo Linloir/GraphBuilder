@@ -1,4 +1,4 @@
-#include "graph_implement.h"
+#include "visual_graph/graph_implement.h"
 #include <QDebug>
 
 AbstractGraph::~AbstractGraph(){}
