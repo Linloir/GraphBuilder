@@ -25,10 +25,12 @@
 class customIcon : public QPushButton{
     Q_OBJECT
 
+    // 当一个类的成员变量或者成员函数用属性系统处理一下，它们就从 C++ 内部中暴露出来
     Q_PROPERTY(qreal rotationAngle READ rotationAngle WRITE setRotationAngle NOTIFY rotationAngleChanged)
 
 private:
     int radius;
+    // qreal在桌面操作系统中double类型，嵌入设备系统中float类型
     qreal widgetRatio;
     qreal iconSizeRate = 0.8;
     qreal rotation = 0;
@@ -49,6 +51,7 @@ protected:
 
 protected:
     qreal rotationAngle() const {return rotation;}
+                            // 只读
 
 public:
     customIcon(QString iconPath, QString hint = "", int r = 0, QWidget *parent = nullptr);

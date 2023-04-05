@@ -6,6 +6,7 @@
 #include <QGraphicsDropShadowEffect>
 #include "slidepage.h"
 #include "mycanvas.h"
+#include "visual_sort/mysort.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,12 +30,15 @@ private:
 
     QVector<SlidePage*> pageList;
     SlidePage *createNewPage = nullptr;
+    SlidePage * sortNewPage = nullptr;
     SlidePage *defaultSettingsPage = nullptr;
     SlidePage *curSettingsPage = nullptr;
     SlidePage *layersPage = nullptr;
+    SlidePage *sortLayerPage = nullptr;
     singleSelectGroup *layerSel = nullptr;
 
     QVector<MyCanvas*> canvasList;
+    QVector<MySort*> sortList;
     MyCanvas *curCanvas = nullptr;
 
     void selectCanvas(MyCanvas *canvas);

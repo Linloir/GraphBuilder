@@ -17,7 +17,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mycanvas.cpp \
-    slidepage.cpp
+    slidepage.cpp \
+    visual_sort/mysort.cpp
 
 HEADERS += \
     customScrollContainer.h \
@@ -26,7 +27,8 @@ HEADERS += \
     graph_view.h \
     mainwindow.h \
     mycanvas.h \
-    slidepage.h
+    slidepage.h \
+    visual_sort/mysort.h
 
 FORMS += \
     mainwindow.ui

@@ -69,21 +69,22 @@ void MainWindow::Init(){
     /*****************************************************************/
 
     /* Create about page */
+    //侧页-单击首页设置
     defaultSettingsPage = new SlidePage(cornerRadius, "ABOUT", ui->mainWidget);
     textInputItem *version = new textInputItem("version", defaultSettingsPage);
     version->setValue("1.3-beta");
     version->setEnabled(false);
     textInputItem *updateDate = new textInputItem("last-upd", defaultSettingsPage);
-    updateDate->setValue("2021/12/6 10:14");
+    updateDate->setValue("2023/4/5 10:14");
     updateDate->setEnabled(false);
     textInputItem *Author = new textInputItem("author", defaultSettingsPage);
-    Author->setValue("Linloir | Made with love");
+    Author->setValue("20 Eyes | Made with love");
     Author->setEnabled(false);
     textInputItem *lic = new textInputItem("lic", defaultSettingsPage);
     lic->setValue("MIT License");
     lic->setEnabled(false);
     textInputItem *GitHub = new textInputItem("git", defaultSettingsPage);
-    GitHub->setValue("github.com/Linloir");
+    GitHub->setValue("github.com/chuanlukk/visualization");
     GitHub->setEnabled(false);
     defaultSettingsPage->AddContent(GitHub);
     defaultSettingsPage->AddContent(lic);
@@ -97,6 +98,7 @@ void MainWindow::Init(){
     /************************/
 
     /* Initialize display area */
+    // 标题
     QFont titleFont = QFont("Corbel Light", 24);
     QFontMetrics titleFm(titleFont);
     canvasTitle = new QLineEdit(this);
@@ -109,6 +111,7 @@ void MainWindow::Init(){
     canvasTitle->setStyleSheet("background-color:#00000000;border-style:none;border-width:0px;margin-left:1px;");
     connect(canvasTitle, &QLineEdit::textEdited, canvasTitle, [=](QString text){canvasTitle->setMaximumWidth(titleFm.size(Qt::TextSingleLine, text).width());});
 
+    // 描述
     QFont descFont = QFont("Corbel Light", 12);
     QFontMetrics descFm(descFont);
     canvasDesc = new QLineEdit(this);
@@ -119,6 +122,7 @@ void MainWindow::Init(){
     canvasDesc->setMinimumHeight(descFm.lineSpacing());
     canvasDesc->setStyleSheet("background-color:#00000000;border-style:none;border-width:0px;");
 
+    // 图标-设置
     settingsIcon = new customIcon(":/icons/icons/settings.svg", "settings", 5, this);
     settingsIcon->setMinimumHeight(canvasTitle->height() * 0.7);
     settingsIcon->setMaximumWidth(canvasTitle->height() * 0.7);
@@ -131,12 +135,13 @@ void MainWindow::Init(){
         rotate->start();
         curSettingsPage->slideIn();
     });
+    // 图标-图层
     layersIcon = new customIcon(":/icons/icons/layers.svg", "layers", 5, this);
     layersIcon->setMinimumHeight(canvasTitle->height() * 0.7);
     layersIcon->setMaximumWidth(canvasTitle->height() * 0.7);
 
     /* create title */
-
+    // 标题栏布局
     QWidget *titleInnerWidget = new QWidget(this);
     titleInnerWidget->setFixedHeight(canvasTitle->height());
     QHBoxLayout *innerLayout = new QHBoxLayout(titleInnerWidget);
@@ -158,11 +163,18 @@ void MainWindow::Init(){
     outerLayout->addWidget(canvasDesc);
 
     /* create default page */
-
+    // 首页
     defaultPage = new QWidget(ui->mainWidget);
     defaultPage->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    bigIconButton *createNew = new bigIconButton(":/icons/icons/create.png", "Create new", 10, this);
+    bigIconButton *createNew = new bigIconButton(":/icons/icons/create.png", "Create Graph", 10, this);
     createNew->setScale(0.9);
+
+
+    // MYSORT
+    bigIconButton * sortNew = new bigIconButton(":/icons/icons/sort.png", "Create Sort", 10, this);
+
+
+
     bigIconButton *openFile = new bigIconButton(":/icons/icons/open.png", "Open from file", 10, this);
     connect(openFile, &bigIconButton::clicked, this, [=](){
         QString inputPath = QFileDialog::getOpenFileName(this, tr("Open map"), " ",  tr("Map File(*.map)"));
@@ -192,15 +204,29 @@ void MainWindow::Init(){
     defaultPageLayout->setContentsMargins(50, 30, 50, 80);
     defaultPageLayout->setSpacing(20);
     defaultPageLayout->addWidget(createNew);
+    defaultPageLayout->addWidget(sortNew);
     defaultPageLayout->addWidget(openFile);
+
 
     /* create layers page */
     //for add new page
-    textInputItem *rename = new textInputItem("Name:",createNewPage);
-    rename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));
-    textInputItem *redescribe = new textInputItem("Detail:",createNewPage);
-    redescribe->setValue("No description");
+    // 侧页-Create Graph
+    textInputItem *graphRename = new textInputItem("Name:",createNewPage);
+    graphRename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));
+    textInputItem *graphRedescribe = new textInputItem("Detail:",createNewPage);
+    graphRedescribe->setValue("No description");
 
+
+    //MYSORT
+    //侧页-Create Sort
+    textInputItem *sortRename = new textInputItem("Name:", sortNewPage);
+    sortRename->setValue("Sort_" + QString::asprintf("%d", sortList.size()));
+    textInputItem *sortRedescribe = new textInputItem("Detail:",sortNewPage);
+    sortRedescribe->setValue("No description");
+
+
+
+    //侧页-单击首页图层
     layersPage = new SlidePage(cornerRadius, "LAYERS", ui->mainWidget);
     layersPage->stackUnder(createNewPage);
     connect(layersIcon, &customIcon::clicked, layersPage, &SlidePage::slideIn);
@@ -234,7 +260,7 @@ void MainWindow::Init(){
     layersPage->AddContent(addNewBtn);
     layersPage->AddContent(openFileBtn);
     layersPage->AddContent(layerSel);
-    connect(addNewBtn, &textButton::clicked, this, [=](){rename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));redescribe->setValue("No description");createNewPage->slideIn();});
+    connect(addNewBtn, &textButton::clicked, this, [=](){graphRename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));graphRedescribe->setValue("No description");createNewPage->slideIn();});
     layersPage->show();
     pageList.push_back(layersPage);
 
@@ -260,8 +286,8 @@ void MainWindow::Init(){
     textButton *submit = new textButton("Create!", createNewPage);
     connect(submit, &textButton::clicked, this, [=](){
         MyCanvas *newCanvas = new MyCanvas(cornerRadius,
-                                           rename->value(),
-                                           redescribe->value(),
+                                           graphRename->value(),
+                                           graphRedescribe->value(),
                                            structureSel->value() == 0 ? MyCanvas::AL : MyCanvas::AML,
                                            dirSel->value() == 0 ? MyCanvas::DG : MyCanvas::UDG, ui->mainWidget);
         canvasList.push_back(newCanvas);
@@ -284,11 +310,47 @@ void MainWindow::Init(){
     createNewPage->AddContent(dirSel);
     createNewPage->AddContent(structureSel);
     createNewPage->AddContent(whiteSpace);
-    createNewPage->AddContent(redescribe);
-    createNewPage->AddContent(rename);
-    connect(createNew, &bigIconButton::clicked, createNewPage, [=](){rename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));redescribe->setValue("No description");createNewPage->slideIn();});
+    createNewPage->AddContent(graphRedescribe);
+    createNewPage->AddContent(graphRename);
+    connect(createNew, &bigIconButton::clicked, createNewPage, [=](){graphRename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));graphRedescribe->setValue("No description");createNewPage->slideIn();});
     createNewPage->show();
     pageList.push_back(createNewPage);
+
+    // MYSORT
+    sortNewPage = new SlidePage(cornerRadius, "CREATE SORT",ui->mainWidget);
+    QLineEdit * sortName = new QLineEdit(this);
+    sortName->setMaximumHeight(20);
+    QLineEdit * sortDesc = new QLineEdit(this);
+    sortDesc->setMaximumHeight(20);
+    QWidget * sortWhiteSpace = new QWidget(sortNewPage);
+    sortWhiteSpace->setFixedHeight(30);
+    singleSelectGroup * sortSel = new singleSelectGroup("Algorithm", sortNewPage);
+    selectionItem * sortItems[5];
+    sortItems[0] = new selectionItem("Bubble Sort", "冒泡排序");
+    sortItems[1] = new selectionItem("Selection Sort", "选择排序");
+    sortItems[2] = new selectionItem("Insertion Sort", "插入排序");
+    sortItems[3] = new selectionItem("Shell Sort", "希尔排序");
+    sortItems[4] = new selectionItem("Quick Sort", "快速排序");
+    for(auto item : sortItems)
+        sortSel->AddItem(item);
+    textButton * goSort = new textButton("Go to Sort!", sortNewPage);
+//    connect()
+    sortNewPage->AddContent(goSort);
+    sortNewPage->AddContent(sortSel);
+    sortNewPage->AddContent(sortWhiteSpace);
+    sortNewPage->AddContent(sortRedescribe);
+    sortNewPage->AddContent(sortRename);
+    connect(sortNew, &bigIconButton::clicked, sortNewPage, [=](){
+        sortRename->setValue("Sort_" + QString::asprintf("%d", sortList.size()));
+        sortRedescribe->setValue("No description");
+        sortNewPage->slideIn();
+    });
+    sortNewPage->show();
+    pageList.push_back(sortNewPage);
+
+
+
+
 
     ui->displayLayout->addWidget(titleWidget);
     ui->displayLayout->addWidget(defaultPage);

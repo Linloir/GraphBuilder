@@ -6,5 +6,6 @@
         <file>icons/open.png</file>
         <file>icons/create.png</file>
         <file>icons/layers.svg</file>
+        <file>icons/sort.png</file>
     </qresource>
 </RCC>
