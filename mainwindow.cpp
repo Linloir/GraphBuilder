@@ -181,8 +181,8 @@ void MainWindow::Init(){
         if(!inputPath.isEmpty()){
             MyCanvas *newCanvas = loadCanvas(inputPath);
             if(newCanvas != nullptr){
-                canvasList.push_back(newCanvas);
-                selectionItem *newLayer = new selectionItem(newCanvas->name(), newCanvas->description(), layersPage);
+                graphList.push_back(newCanvas);
+                selectionItem *newLayer = new selectionItem(newCanvas->name(), newCanvas->description(), allLayers);
                 layerSel->AddItem(newLayer);
                 layerSel->SetSelection(newLayer);
                 pageList.push_back(newCanvas->settingPage());
@@ -212,7 +212,7 @@ void MainWindow::Init(){
     //for add new page
     // 侧页-Create Graph
     textInputItem *graphRename = new textInputItem("Name:",createNewPage);
-    graphRename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));
+    graphRename->setValue("Layer_" + QString::asprintf("%d", graphList.size()));
     textInputItem *graphRedescribe = new textInputItem("Detail:",createNewPage);
     graphRedescribe->setValue("No description");
 
@@ -227,19 +227,19 @@ void MainWindow::Init(){
 
 
     //侧页-单击首页图层
-    layersPage = new SlidePage(cornerRadius, "LAYERS", ui->mainWidget);
-    layersPage->stackUnder(createNewPage);
-    connect(layersIcon, &customIcon::clicked, layersPage, &SlidePage::slideIn);
-    layerSel = new singleSelectGroup("Layers", layersPage);
-    connect(layerSel, &singleSelectGroup::itemChange, layersPage, [=](){layersPage->UpdateContents();});
-    textButton *openFileBtn = new textButton("Open file", layersPage);
+    allLayers = new SlidePage(cornerRadius, "LAYERS", ui->mainWidget);
+    allLayers->stackUnder(createNewPage);
+    connect(layersIcon, &customIcon::clicked, allLayers, &SlidePage::slideIn);
+    layerSel = new singleSelectGroup("Layers", allLayers);
+    connect(layerSel, &singleSelectGroup::itemChange, allLayers, [=](){allLayers->UpdateContents();});
+    textButton *openFileBtn = new textButton("Open file", allLayers);
     connect(openFileBtn, &textButton::clicked, this, [=](){
         QString inputPath = QFileDialog::getOpenFileName(this, tr("Open map"), " ",  tr("Map File(*.map)"));
         if(!inputPath.isEmpty()){
             MyCanvas *newCanvas = loadCanvas(inputPath);
             if(newCanvas != nullptr){
-                canvasList.push_back(newCanvas);
-                selectionItem *newLayer = new selectionItem(newCanvas->name(), newCanvas->description(), layersPage);
+                graphList.push_back(newCanvas);
+                selectionItem *newLayer = new selectionItem(newCanvas->name(), newCanvas->description(), allLayers);
                 layerSel->AddItem(newLayer);
                 layerSel->SetSelection(newLayer);
                 pageList.push_back(newCanvas->settingPage());
@@ -256,13 +256,13 @@ void MainWindow::Init(){
             }
         }
     });
-    textButton *addNewBtn = new textButton("Create new", layersPage);
-    layersPage->AddContent(addNewBtn);
-    layersPage->AddContent(openFileBtn);
-    layersPage->AddContent(layerSel);
-    connect(addNewBtn, &textButton::clicked, this, [=](){graphRename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));graphRedescribe->setValue("No description");createNewPage->slideIn();});
-    layersPage->show();
-    pageList.push_back(layersPage);
+    textButton *addNewBtn = new textButton("Create new", allLayers);
+    allLayers->AddContent(addNewBtn);
+    allLayers->AddContent(openFileBtn);
+    allLayers->AddContent(layerSel);
+    connect(addNewBtn, &textButton::clicked, this, [=](){graphRename->setValue("Layer_" + QString::asprintf("%d", graphList.size()));graphRedescribe->setValue("No description");createNewPage->slideIn();});
+    allLayers->show();
+    pageList.push_back(allLayers);
 
     /* create add new slide page */
     createNewPage = new SlidePage(cornerRadius, "CREATE CANVAS", ui->mainWidget);
@@ -270,7 +270,6 @@ void MainWindow::Init(){
     canvasName->setMaximumHeight(20);
     QLineEdit *canvasDesc = new QLineEdit(this);
     canvasDesc->setMaximumHeight(20);
-
     QWidget *whiteSpace = new QWidget(createNewPage);
     whiteSpace->setFixedHeight(30);
     singleSelectGroup *structureSel = new singleSelectGroup("Structure",createNewPage);
@@ -290,8 +289,8 @@ void MainWindow::Init(){
                                            graphRedescribe->value(),
                                            structureSel->value() == 0 ? MyCanvas::AL : MyCanvas::AML,
                                            dirSel->value() == 0 ? MyCanvas::DG : MyCanvas::UDG, ui->mainWidget);
-        canvasList.push_back(newCanvas);
-        selectionItem *newLayer = new selectionItem(newCanvas->name(), newCanvas->description(), layersPage);
+        graphList.push_back(newCanvas);
+        selectionItem *newLayer = new selectionItem(newCanvas->name(), newCanvas->description(), allLayers);
         layerSel->AddItem(newLayer);
         layerSel->SetSelection(newLayer);
         pageList.push_back(newCanvas->settingPage());
@@ -312,7 +311,7 @@ void MainWindow::Init(){
     createNewPage->AddContent(whiteSpace);
     createNewPage->AddContent(graphRedescribe);
     createNewPage->AddContent(graphRename);
-    connect(createNew, &bigIconButton::clicked, createNewPage, [=](){graphRename->setValue("Layer_" + QString::asprintf("%d", canvasList.size()));graphRedescribe->setValue("No description");createNewPage->slideIn();});
+    connect(createNew, &bigIconButton::clicked, createNewPage, [=](){graphRename->setValue("Layer_" + QString::asprintf("%d", graphList.size()));graphRedescribe->setValue("No description");createNewPage->slideIn();});
     createNewPage->show();
     pageList.push_back(createNewPage);
 
@@ -334,7 +333,28 @@ void MainWindow::Init(){
     for(auto item : sortItems)
         sortSel->AddItem(item);
     textButton * goSort = new textButton("Go to Sort!", sortNewPage);
-//    connect()
+    connect(goSort, &textButton::clicked, this, [=](){
+        MySort * newSort = new MySort(cornerRadius,
+                                      sortRename->value(),
+                                      sortRedescribe->value(),
+                                      sortSel->value(),
+                                      ui->mainWidget);
+        sortList.push_back(newSort);
+        selectionItem * newLayer = new selectionItem(newSort->name(), newSort->description(), allLayers);
+        layerSel->AddItem(newLayer);
+        layerSel->SetSelection(newLayer);
+        pageList.push_back(newSort->settingPage());
+        connect(newLayer, &selectionItem::selected, this, [=](){selectSort(newSort);});
+        selectSort(newSort);
+        connect(newSort, &MySort::nameChanged, this, [=](QString text){
+            canvasTitle->setText(text);
+            canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, canvasTitle->text()).width() + 10);
+            newLayer->setTitle(text);
+        });
+        connect(newSort, &MySort::descChanged, this, [=](QString text){this->canvasDesc->setText(text);newLayer->setDescription(text);});
+        connect(newSort, &MySort::setDel, this, [=](MySort * c){curSettingsPage->slideOut();deleteSort(c);layerSel->RemoveItem(newLayer);});
+        sortNewPage->slideOut();
+    });
     sortNewPage->AddContent(goSort);
     sortNewPage->AddContent(sortSel);
     sortNewPage->AddContent(sortWhiteSpace);
@@ -358,40 +378,40 @@ void MainWindow::Init(){
 }
 
 void MainWindow::selectCanvas(MyCanvas *canvas){
-    if(!curCanvas){
+    if(!curGraph){
         ui->displayLayout->removeWidget(defaultPage);
         defaultPage->hide();
         ui->displayLayout->addWidget(canvas);
         canvas->show();
     }
     else{
-        ui->displayLayout->removeWidget(curCanvas);
-        curCanvas->hide();
+        ui->displayLayout->removeWidget(curGraph);
+        curGraph->hide();
         ui->displayLayout->addWidget(canvas);
         canvas->show();
     }
-    curCanvas = canvas;
+    curGraph = canvas;
     canvas->settingPage()->setParent(ui->mainWidget);
     curSettingsPage = canvas->settingPage();
-    canvasTitle->setText(curCanvas->name());
+    canvasTitle->setText(curGraph->name());
     canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, canvasTitle->text()).width() + 10);
-    canvasDesc->setText(curCanvas->description());
+    canvasDesc->setText(curGraph->description());
 }
 
 void MainWindow::deleteCanvas(MyCanvas *canvas){
-    int index = canvasList.indexOf(canvas);
+    int index = graphList.indexOf(canvas);
     if(index < 0)
         return;
-    canvasList.erase(canvasList.begin() + index);
-    ui->displayLayout->removeWidget(curCanvas);
-    curCanvas->hide();
-    if(canvasList.size() > 0){
-        selectCanvas(canvasList[0]);
+    graphList.erase(graphList.begin() + index);
+    ui->displayLayout->removeWidget(curGraph);
+    curGraph->hide();
+    if(graphList.size() > 0){
+        selectCanvas(graphList[0]);
     }
     else{
         ui->displayLayout->addWidget(defaultPage);
         defaultPage->show();
-        curCanvas = nullptr;
+        curGraph = nullptr;
         canvasTitle->setText("START");
         canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, "START").width() + 10);
         canvasDesc->setText("Add your first canvas to start");
@@ -401,6 +421,52 @@ void MainWindow::deleteCanvas(MyCanvas *canvas){
     delete canvas;
     ui->mainWidget->update();
 }
+
+void MainWindow::selectSort(MySort *st)
+{
+    if(!curSort){
+        ui->displayLayout->removeWidget(defaultPage);
+        defaultPage->hide();
+        ui->displayLayout->addWidget(st);
+        st->show();
+    }else{
+        ui->displayLayout->removeWidget(curSort);
+        curSort->hide();
+        ui->displayLayout->addWidget(st);
+        st->show();
+    }
+    curSort = st;
+    st->settingPage()->setParent(ui->mainWidget);
+    curSettingsPage = st->settingPage();
+    canvasTitle->setText(curSort->name());
+    canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, canvasTitle->text()).width() + 10);
+    canvasDesc->setText(curSort->description());
+}
+
+void MainWindow::deleteSort(MySort *st)
+{
+    int index = sortList.indexOf(st);
+    if(index < 0)
+        return;
+    sortList.erase(sortList.begin() + index);
+    ui->displayLayout->removeWidget(curSort);
+    curSort->hide();
+    if(sortList.size() > 0){
+        selectSort(sortList[0]);
+    }else{
+        ui->displayLayout->addWidget(defaultPage);
+        defaultPage->show();
+        curSort = nullptr;
+        canvasTitle->setText("START");
+        canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, "START").width() + 10);
+        canvasDesc->setText("Add your first canvas to start");
+        curSettingsPage = defaultSettingsPage;
+    }
+    pageList.erase(pageList.begin() + pageList.indexOf(st->settingPage()));
+    delete st;
+    ui->mainWidget->update();
+}
+
 
 MainWindow::~MainWindow()
 {

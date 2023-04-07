@@ -18,7 +18,16 @@ SOURCES += \
     visual_graph/graph_implement.cpp \
     visual_graph/graph_view.cpp \
     visual_graph/mycanvas.cpp \
-    visual_sort/mysort.cpp
+    visual_sort/bubble_simple.cpp \
+    visual_sort/bubble_sort.cpp \
+    visual_sort/insertion_sort.cpp \
+    visual_sort/maincanvas.cpp \
+    visual_sort/mysort.cpp \
+    visual_sort/quick_sort.cpp \
+    visual_sort/selection_sort.cpp \
+    visual_sort/shell_sort.cpp \
+    visual_sort/sortfactory.cpp \
+    visual_sort/sortobject.cpp
 
 HEADERS += \
     customScrollContainer.h \
@@ -28,7 +37,16 @@ HEADERS += \
     visual_graph/graph_implement.h \
     visual_graph/graph_view.h \
     visual_graph/mycanvas.h \
-    visual_sort/mysort.h
+    visual_sort/bubble_simple.h \
+    visual_sort/bubble_sort.h \
+    visual_sort/insertion_sort.h \
+    visual_sort/maincanvas.h \
+    visual_sort/mysort.h \
+    visual_sort/quick_sort.h \
+    visual_sort/selection_sort.h \
+    visual_sort/shell_sort.h \
+    visual_sort/sortfactory.h \
+    visual_sort/sortobject.h
 
 FORMS += \
     mainwindow.ui

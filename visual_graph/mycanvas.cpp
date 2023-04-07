@@ -58,6 +58,7 @@ MyCanvas::MyCanvas(QTextStream &ts, int radius, QWidget *parent) :
 void MyCanvas::CreateSettings(int radius){
     /* create settings page */
     settings = new SlidePage(radius, "SETTINGS", this->parentWidget());
+
     singleSelectGroup *structureSetting = new singleSelectGroup("Structure", this);
     selectionItem *setAL = new selectionItem("AL", "Adjacent list structure", this);
     selectionItem *setAML = new selectionItem("AML", "Adjacent multiple list", this);
@@ -78,6 +79,7 @@ void MyCanvas::CreateSettings(int radius){
             structure_type = AL;
         }
     });
+
     singleSelectGroup *dirSetting = new singleSelectGroup("Mode", this);
     selectionItem *setDG = new selectionItem("DG", "Directed graph", this);
     selectionItem *setUDG = new selectionItem("UDG", "Undirected graph", this);
@@ -89,6 +91,7 @@ void MyCanvas::CreateSettings(int radius){
         view->setType(id == 0 ? MyGraphicsView::DG : MyGraphicsView::UDG);
         type = id == 0 ? DG : UDG;
     });
+
     singleSelectGroup *dfsSetting = new singleSelectGroup("Traverse Mode", this);
     selectionItem *setGenerateTree = new selectionItem("Tree", "Generate tree", this);
     selectionItem *setGenerateForest = new selectionItem("Forest", "Generate forest", this);
@@ -97,23 +100,29 @@ void MyCanvas::CreateSettings(int radius){
     connect(dfsSetting, &singleSelectGroup::selectedItemChange, this, [=](int id){
         generateForest = id == 1;
     });
+
     QWidget *whiteSpace = new QWidget(this);
     whiteSpace->setFixedHeight(30);
+
     horizontalValueAdjuster *aniSpeed = new horizontalValueAdjuster("Animation speed", 0.1, 20, 0.1, this);
     aniSpeed->setValue(1.0);
     connect(aniSpeed, &horizontalValueAdjuster::valueChanged, view, [=](qreal value){view->setAniRate(value);});
+
     textInputItem *rename = new textInputItem("Name", this);
     rename->setValue(canvasName);
     connect(rename, &textInputItem::textEdited, this, [=](QString text){canvasName = text; emit nameChanged(text);});
     textInputItem *redesc = new textInputItem("Detail", this);
     redesc->setValue(canvasDescription);
     connect(redesc, &textInputItem::textEdited, this, [=](QString text){canvasDescription = text; emit descChanged(text);});
+
     textButton *hideBtn = new textButton("Hide Unvisited Items", this);
     connect(hideBtn, &textButton::clicked, this, [=](){view->HideUnvisited();});
     textButton *showBtn = new textButton("Show Unvisited Items", this);
     connect(showBtn, &textButton::clicked, this, [=](){view->ShowUnvisited();});
+
     QWidget *whiteSpace2 = new QWidget(this);
     whiteSpace2->setFixedHeight(30);
+
     textButton *saveBtn = new textButton("Save to file", this);
     connect(saveBtn, &textButton::clicked, this, [=](){
         QString savePath = QFileDialog::getSaveFileName(this, tr("Save map"), " ", tr("Map file(*.map)"));
@@ -159,40 +168,11 @@ void MyCanvas::Init(){
 
     QFont titleFont = QFont("Corbel", 20);
 
-    QWidget *upper = new QWidget(infoWidget);
-    QVBoxLayout *upperLayout = new QVBoxLayout(upper);
-    upper->setLayout(upperLayout);
-    upperLayout->setContentsMargins(0, 0, 0, 0);
-    upper->setContentsMargins(0, 0, 0, 0);
-    pageName = new QLabel(infoWidget);
-    pageName->setText("INFO");
-    pageName->setFont(titleFont);
-    pageName->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    pageName->setStyleSheet("color:#2c2c2c");
-    QWidget *upperSplitter = new QWidget(upper);
-    upperSplitter->setFixedSize(30, 6);
-    upperSplitter->setStyleSheet("background-color:#3c3c3c;border-radius:3px;");
-    upperLayout->addWidget(pageName);
-    upperLayout->addWidget(upperSplitter);
-
-    QWidget *lower = new QWidget(infoWidget);
-    QVBoxLayout *lowerLayout = new QVBoxLayout(lower);
-    lower->setLayout(lowerLayout);
-    lowerLayout->setContentsMargins(0, 0, 0, 0);
-    QLabel *logLabel = new QLabel(lower);
-    logLabel->setText("LOG");
-    logLabel->setFont(titleFont);
-    logLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    logLabel->setStyleSheet("color:#2c2c2c");
-    QWidget *lowerSplitter = new QWidget(lower);
-    lowerSplitter->setFixedSize(30, 6);
-    lowerSplitter->setStyleSheet("background-color:#3c3c3c;border-radius:3px;");
+    contentContainer *upper = new contentContainer("INFO", infoWidget);
+    contentContainer *lower = new contentContainer("LOG", infoWidget);
     ScrollAreaCustom *logDisplay = new ScrollAreaCustom(lower);
     logDisplay->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    lowerLayout->addWidget(logLabel);
-    lowerLayout->addWidget(lowerSplitter);
-    lowerLayout->addWidget(logDisplay);
-
+    lower->AddContent(logDisplay);
     infoLayout->addWidget(upper);
     infoLayout->addWidget(lower);
 
@@ -228,7 +208,7 @@ void MyCanvas::Init(){
     arcNumText->setEnabled(false);
     defTextLayout->addWidget(arcNumText);
     defInfoLayout->addWidget(defTextItems);
-    upperLayout->addWidget(defInfoPage);
+    upper->AddContent(defInfoPage);
     defInfoPage->show();
 
     //VexPage
@@ -272,7 +252,7 @@ void MyCanvas::Init(){
     vexInfoLayout->addWidget(startDij);
     textButton *delVex = new textButton("Delete", "#1acb1b45","#2acb1b45","#3acb1b45", vexInfoPage);
     vexInfoLayout->addWidget(delVex);
-    upperLayout->addWidget(vexInfoPage);
+    upper->AddContent(vexInfoPage);
     vexInfoPage->hide();
 
     //ArcPage
@@ -304,7 +284,7 @@ void MyCanvas::Init(){
     arcInfoLayout->addWidget(reverseBtn);
     textButton *delArc = new textButton("Delete", "#1acb1b45","#2acb1b45","#3acb1b45", arcInfoPage);
     arcInfoLayout->addWidget(delArc);
-    upperLayout->addWidget(arcInfoPage);
+    upper->AddContent(arcInfoPage);
     arcInfoPage->hide();
 
     connect(view, &MyGraphicsView::vexAdded, this, [=](){vexNumText->setValue(QString::asprintf("%d",view->vexNum));});

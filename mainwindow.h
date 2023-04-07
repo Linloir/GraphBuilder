@@ -33,16 +33,19 @@ private:
     SlidePage * sortNewPage = nullptr;
     SlidePage *defaultSettingsPage = nullptr;
     SlidePage *curSettingsPage = nullptr;
-    SlidePage *layersPage = nullptr;
+    SlidePage *allLayers = nullptr; // 图层按钮页
     SlidePage *sortLayerPage = nullptr;
     singleSelectGroup *layerSel = nullptr;
 
-    QVector<MyCanvas*> canvasList;
+    QVector<MyCanvas*> graphList;
     QVector<MySort*> sortList;
-    MyCanvas *curCanvas = nullptr;
+    MyCanvas *curGraph = nullptr;
+    MySort *curSort = nullptr;
 
     void selectCanvas(MyCanvas *canvas);
     void deleteCanvas(MyCanvas *canvas);
+    void selectSort(MySort *st);
+    void deleteSort(MySort *st);
     void Init();
 
     enum {AT_LEFT = 1, AT_TOP = 2,  AT_RIGHT = 4, AT_BOTTOM = 8,

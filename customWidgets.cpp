@@ -826,3 +826,22 @@ void textButton::mouseReleaseEvent(QMouseEvent *event){
         emit clicked();
     }
 }
+
+contentContainer::contentContainer(QString titleText, QWidget *parent) :
+    QWidget(parent)
+{
+    layout = new QVBoxLayout(this);
+    this->setLayout(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
+    this->setContentsMargins(0, 0, 0, 0);
+    title = new QLabel(this);
+    title->setText(titleText);
+    title->setFont(titleFont);
+    title->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    title->setStyleSheet("color:#2c2c2c");
+    splitter = new QWidget(this);
+    splitter->setFixedSize(30, 6);
+    splitter->setStyleSheet("background-color:#3c3c3c;border-radius:3px;");
+    layout->addWidget(title);
+    layout->addWidget(splitter);
+}

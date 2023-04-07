@@ -14,6 +14,7 @@
 #include <QMouseEvent>
 #include <QResizeEvent>
 #include <QFocusEvent>
+#include <QGridLayout>
 
 #if (QT_VERSION > QT_VERSION_CHECK(6,3,0))
 #include <QGraphicsOpacityEffect>
@@ -42,6 +43,7 @@ private:
     QColor defaultColor = QColor(0, 0, 0, 0);
     QColor hoverColor = QColor(241, 241, 241, 200);
 
+
 protected:
     void paintEvent(QPaintEvent* event);
     void enterEvent(QEnterEvent *event);
@@ -67,6 +69,7 @@ class selectionItem : public QWidget{
     Q_OBJECT
 
 private:
+    int type;
     QLabel *title;
     QLabel *description;
     QWidget *indicator;
@@ -263,6 +266,20 @@ public:
 
 signals:
     void clicked();
+};
+
+class contentContainer : public QWidget{
+    Q_OBJECT
+
+private:
+    QVBoxLayout * layout;
+    QLabel * title;
+    QWidget * splitter;
+    QFont titleFont = QFont("Corbel", 20);
+public:
+    contentContainer(QString titleText, QWidget * parent = nullptr);
+    void AddContent(QWidget * widget){this->layout->addWidget(widget);}
+
 };
 
 #endif // CUSTOMWIDGETS_H
