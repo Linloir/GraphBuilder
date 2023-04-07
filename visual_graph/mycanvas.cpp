@@ -166,8 +166,6 @@ void MyCanvas::Init(){
     infoLayout->setContentsMargins(10, 0, 0, 0);
     infoLayout->setAlignment(Qt::AlignTop);
 
-    QFont titleFont = QFont("Corbel", 20);
-
     contentContainer *upper = new contentContainer("INFO", infoWidget);
     contentContainer *lower = new contentContainer("LOG", infoWidget);
     ScrollAreaCustom *logDisplay = new ScrollAreaCustom(lower);
