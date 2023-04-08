@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include "slidepage.h"
 #include "visual_sort/maincanvas.h"
+#include "visual_sort/sortfactory.h"
 
 #if (QT_VERSION > QT_VERSION_CHECK(6,3,0))
 #include <QFileDialog>
@@ -22,7 +23,7 @@ private:
     SlidePage *settings;
 
     //For display
-    QWidget * cntlWidget;
+    QWidget * sideWidget;
     MainCanvas * sortCanvas;
 //    QWidget * sortGround;
     QHBoxLayout * mainLayout;
@@ -31,7 +32,8 @@ private:
     void CreateSettings(int r);
 
 public:
-    enum sortType {BUBBLE, SELECTION, INSERTION, SHELL, QUICK};
+    enum sortType {BUBBLE, SELECTION, INSERTION, QUICK, SHELL};
+    QString typeName[5] = {"BUBBLE", "SELECTION", "INSERTION", "QUICK", "SHELL"};
 
     explicit MySort(int radius, QString name = "", QString desc = "", int _type = 0, QWidget *parent = nullptr);
     MySort(QTextStream &ts, int radius, QWidget *parent = nullptr);

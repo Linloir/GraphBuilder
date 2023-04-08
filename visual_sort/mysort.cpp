@@ -65,7 +65,7 @@ void MySort::CreateSettings(int r)
 //        if(!savePath.isEmpty()) SaveToFile
 //    })
 
-    textButton * delBtn = new textButton("Delete", "#0acb1b45", "#1acbab45", "#2acbab45", this);
+    textButton * delBtn = new textButton("Delete", "#0acb1b45","#1acb1b45","#2acb1b45", this);
     connect(delBtn, &textButton::clicked, this, [=](){emit setDel(this);});
     settings->AddContent(delBtn);
     settings->AddContent(whiteSpace);
@@ -81,41 +81,81 @@ void MySort::CreateSettings(int r)
 
 void MySort::Init()
 {
-    cntlWidget = new QWidget(this);
-    mainLayout->addWidget(cntlWidget);
+    sideWidget = new QWidget(this);
+    mainLayout->addWidget(sideWidget);
     mainLayout->setStretch(0, 1);
-//    mainLayout->setStretch(1, 3);
-    cntlWidget->setFixedWidth(250);
-//    cntlWidget->setFixedWidth(500);
+    sideWidget->setFixedWidth(250);
 
-    QVBoxLayout *cntlLayout = new QVBoxLayout(cntlWidget);
-    cntlWidget->setLayout((cntlLayout));
-    cntlLayout->setContentsMargins(10, 0, 0, 0);
-    cntlLayout->setAlignment(Qt::AlignTop);
+    QVBoxLayout *sideLayout = new QVBoxLayout(sideWidget);
+    sideWidget->setLayout((sideLayout));
+    sideLayout->setContentsMargins(10, 0, 0, 0);
+    sideLayout->setAlignment(Qt::AlignTop);
 
-    contentContainer * control = new contentContainer("CONTROL", cntlWidget);
+    contentContainer * info = new contentContainer("INFO", sideWidget);
+    contentContainer * control = new contentContainer("CONTROL", sideWidget);
+    QWidget *whiteSpace = new QWidget(this);
+    sideLayout->addWidget(info);
+    sideLayout->addWidget(control);
+    sideLayout->addWidget(whiteSpace);
+    sideLayout->setStretch(2,1);
+
+
+    QWidget *defInfoPage = new QWidget(sideWidget);
+    QVBoxLayout *defInfoLayout = new QVBoxLayout(defInfoPage);
+    defInfoPage->setLayout(defInfoLayout);
+    defInfoLayout->setContentsMargins(0, 0, 0, 0);
+    defInfoLayout->setAlignment(Qt::AlignTop);
+    QWidget *defTextItems = new QWidget(defInfoPage);
+    defTextItems->setObjectName("DefTextItems");
+    defTextItems->setStyleSheet("QWidget#DefTextItems{border:1px solid #cfcfcf;border-radius:5px;}");
+    QVBoxLayout *defTextLayout = new QVBoxLayout(defTextItems);
+    defTextItems->setLayout(defTextLayout);
+    defTextLayout->setContentsMargins(0, 5, 0, 5);
+    textInputItem *textName = new textInputItem("Type", defInfoPage);
+    textName->setValue(typeName[type]);
+    textName->setEnabled(false);
+    defTextLayout->addWidget(textName);
+    info->AddContent(defTextItems);
+    defInfoPage->show();
+
+
     textInputItem *num = new textInputItem("Amount", control);
     horizontalValueAdjuster *aniSpeed = new horizontalValueAdjuster("Animation speed", 1, 199, 1, control);
-    textButton *strtBtn = new textButton("Start", cntlWidget);
-    textButton *stopBtn = new textButton("END", "#0acb1b45","#1acb1b45","#2acb1b45", cntlWidget);
+    textButton *strtBtn = new textButton("Start", sideWidget);
+    textButton *stopBtn = new textButton("End", "#0acb1b45","#1acb1b45","#2acb1b45", sideWidget);
 
-    QWidget *whiteSpace = new QWidget(this);
 
+//    whiteSpace->setSizePolicy(QSizePolicy::Expanding);
 
     control->AddContent(num);
     control->AddContent(aniSpeed);
     control->AddContent(strtBtn);
     control->AddContent(stopBtn);
-    cntlLayout->addWidget(control);
-    cntlLayout->addWidget(whiteSpace);
-    cntlLayout->setStretch(1,1);
 
-//    cntlWidget->show();
 
-//    QVBoxLayout * cntlLayout = new QVBoxLayout(cntlWidget);
-//    cntlWidget->setLayout(cntlLayout);
-//    cntlLayout->setContentsMargins(10, 0, 0, 0);
-//    cntlLayout->setAlignment(Qt::AlignTop);
+    connect(strtBtn, &textButton::clicked, this, [=](){
+        if(type != sortCanvas->getSortType()){
+            SortObject *obj = SortFactory::getInstance()->createSortObject(type, sortCanvas);
+            sortCanvas->setSortObject(type, obj);
+        }
+        sortCanvas->sort([num](){
+            QString v = num->value();
+            int d = v.toInt();
+            if(d == 0)
+                d = 50;
+            else if (d > 80)
+                d = 80;
+            return d;
+        }(), aniSpeed->value() + 9);
+    });
+    connect(stopBtn, &textButton::clicked, this, [=](){
+        sortCanvas->stop();
+    });
+    connect(sortCanvas, &MainCanvas::runFlagChanged, this, [=](bool running){
+        num->setEnabled(!running);
+        aniSpeed->setEnabled(!running);
+        strtBtn->setEnabled(!running);
+    });
 }
 
 

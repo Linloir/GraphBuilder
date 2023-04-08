@@ -340,8 +340,8 @@ void MainWindow::Init(){
     sortItems[0] = new selectionItem("Bubble Sort", "冒泡排序");
     sortItems[1] = new selectionItem("Selection Sort", "选择排序");
     sortItems[2] = new selectionItem("Insertion Sort", "插入排序");
-    sortItems[3] = new selectionItem("Shell Sort", "希尔排序");
-    sortItems[4] = new selectionItem("Quick Sort", "快速排序");
+    sortItems[3] = new selectionItem("Qucik Sort", "快速排序");
+    sortItems[4] = new selectionItem("Shell Sort", "希尔排序");
     for(auto item : sortItems)
         sortSel->AddItem(item);
     textButton * goSort = new textButton("Go to Sort!", sortNewPage);
