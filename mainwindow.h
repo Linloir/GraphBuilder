@@ -29,7 +29,7 @@ private:
     QWidget *canvasDisplay = nullptr;
 
     QVector<SlidePage*> pageList;
-    SlidePage *createNewPage = nullptr;
+    SlidePage *graphNewPage = nullptr;
     SlidePage * sortNewPage = nullptr;
     SlidePage *defaultSettingsPage = nullptr;
     SlidePage *curSettingsPage = nullptr;
@@ -42,10 +42,12 @@ private:
     MyCanvas *curGraph = nullptr;
     MySort *curSort = nullptr;
 
-    void selectCanvas(MyCanvas *canvas);
+    void selectGraph(MyCanvas *canvas);
     void deleteCanvas(MyCanvas *canvas);
     void selectSort(MySort *st);
     void deleteSort(MySort *st);
+    void selectLayout(QWidget *lyt);
+    void selectLayout_(QWidget * x);
     void Init();
 
     enum {AT_LEFT = 1, AT_TOP = 2,  AT_RIGHT = 4, AT_BOTTOM = 8,

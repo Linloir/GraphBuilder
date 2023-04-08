@@ -10,6 +10,8 @@ MySort::MySort(int radius, QString name, QString desc, int _type, QWidget *paren
     mainLayout->setContentsMargins(0, 0, 0, 0);
     this->setLayout(mainLayout);
     sortCanvas = new MainCanvas();
+    sortCanvas->setStyleSheet("background-color: #FFFFFF;border:1px solid #cfcfcf;border-radius:10px;");
+
     mainLayout->addWidget(sortCanvas);
 
     this->setFocusPolicy(Qt::ClickFocus);
@@ -81,8 +83,8 @@ void MySort::Init()
 {
     cntlWidget = new QWidget(this);
     mainLayout->addWidget(cntlWidget);
-    mainLayout->setStretch(0, 7);
-    mainLayout->setStretch(1, 3);
+    mainLayout->setStretch(0, 1);
+//    mainLayout->setStretch(1, 3);
     cntlWidget->setFixedWidth(250);
 //    cntlWidget->setFixedWidth(500);
 
@@ -97,11 +99,17 @@ void MySort::Init()
     textButton *strtBtn = new textButton("Start", cntlWidget);
     textButton *stopBtn = new textButton("END", "#0acb1b45","#1acb1b45","#2acb1b45", cntlWidget);
 
+    QWidget *whiteSpace = new QWidget(this);
+
+
     control->AddContent(num);
     control->AddContent(aniSpeed);
     control->AddContent(strtBtn);
     control->AddContent(stopBtn);
     cntlLayout->addWidget(control);
+    cntlLayout->addWidget(whiteSpace);
+    cntlLayout->setStretch(1,1);
+
 //    cntlWidget->show();
 
 //    QVBoxLayout * cntlLayout = new QVBoxLayout(cntlWidget);
