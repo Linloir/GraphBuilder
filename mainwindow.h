@@ -42,12 +42,12 @@ private:
     MyCanvas *curGraph = nullptr;
     MySort *curSort = nullptr;
 
-    void selectGraph(MyCanvas *canvas);
-    void deleteCanvas(MyCanvas *canvas);
-    void selectSort(MySort *st);
-    void deleteSort(MySort *st);
-    void selectLayout(QWidget *lyt);
-    void selectLayout_(QWidget * x);
+//    void selectGraph(MyCanvas *canvas);
+//    void selectSort(MySort *st);
+//    void deleteCanvas(MyCanvas *canvas);
+//    void deleteSort(MySort *st);
+    void selectLayer(QWidget *lyr);
+    void deleteLayer(QWidget *lyr);
     void Init();
 
     enum {AT_LEFT = 1, AT_TOP = 2,  AT_RIGHT = 4, AT_BOTTOM = 8,

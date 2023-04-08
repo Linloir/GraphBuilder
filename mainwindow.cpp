@@ -186,15 +186,15 @@ void MainWindow::Init(){
                 layerSel->AddItem(newLayer);
                 layerSel->SetSelection(newLayer);
                 pageList.push_back(newCanvas->settingPage());
-                connect(newLayer, &selectionItem::selected, this, [=](){selectGraph(newCanvas);});
-                selectGraph(newCanvas);
+                connect(newLayer, &selectionItem::selected, this, [=](){selectLayer(newCanvas);});
+                selectLayer(newCanvas);
                 connect(newCanvas, &MyCanvas::nameChanged, this, [=](QString text){
                     canvasTitle->setText(text);
                     canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, canvasTitle->text()).width() + 10);
                     newLayer->setTitle(text);
                 });
                 connect(newCanvas, &MyCanvas::descChanged, this, [=](QString text){this->canvasDesc->setText(text);newLayer->setDescription(text);});
-                connect(newCanvas, &MyCanvas::setDel, this, [=](MyCanvas *c){curSettingsPage->slideOut();deleteCanvas(c);layerSel->RemoveItem(newLayer);});
+                connect(newCanvas, &MyCanvas::setDel, this, [=](MyCanvas *c){curSettingsPage->slideOut();deleteLayer(c);layerSel->RemoveItem(newLayer);});
                 graphNewPage->slideOut();
             }
         }
@@ -243,15 +243,15 @@ void MainWindow::Init(){
                 layerSel->AddItem(newLayer);
                 layerSel->SetSelection(newLayer);
                 pageList.push_back(newCanvas->settingPage());
-                connect(newLayer, &selectionItem::selected, this, [=](){selectGraph(newCanvas);});
-                selectGraph(newCanvas);
+                connect(newLayer, &selectionItem::selected, this, [=](){selectLayer(newCanvas);});
+                selectLayer(newCanvas);
                 connect(newCanvas, &MyCanvas::nameChanged, this, [=](QString text){
                     canvasTitle->setText(text);
                     canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, canvasTitle->text()).width() + 10);
                     newLayer->setTitle(text);
                 });
                 connect(newCanvas, &MyCanvas::descChanged, this, [=](QString text){this->canvasDesc->setText(text);newLayer->setDescription(text);});
-                connect(newCanvas, &MyCanvas::setDel, this, [=](MyCanvas *c){curSettingsPage->slideOut();deleteCanvas(c);layerSel->RemoveItem(newLayer);});
+                connect(newCanvas, &MyCanvas::setDel, this, [=](MyCanvas *c){curSettingsPage->slideOut();deleteLayer(c);layerSel->RemoveItem(newLayer);});
                 graphNewPage->slideOut();
             }
         }
@@ -300,10 +300,10 @@ void MainWindow::Init(){
 
         // DEBUG
         connect(newLayer, &selectionItem::selected, this, [=](){
-            selectLayout(newCanvas);
+            selectLayer(newCanvas);
 
         });
-        selectLayout(newCanvas);
+        selectLayer(newCanvas);
 
 
         connect(newCanvas, &MyCanvas::nameChanged, this, [=](QString text){
@@ -312,7 +312,7 @@ void MainWindow::Init(){
             newLayer->setTitle(text);
         });
         connect(newCanvas, &MyCanvas::descChanged, this, [=](QString text){this->canvasDesc->setText(text);newLayer->setDescription(text);});
-        connect(newCanvas, &MyCanvas::setDel, this, [=](MyCanvas *c){curSettingsPage->slideOut();deleteCanvas(c);layerSel->RemoveItem(newLayer);});
+        connect(newCanvas, &MyCanvas::setDel, this, [=](MyCanvas *c){curSettingsPage->slideOut();deleteLayer(c);layerSel->RemoveItem(newLayer);});
         graphNewPage->slideOut();
     });
 
@@ -358,11 +358,11 @@ void MainWindow::Init(){
         pageList.push_back(newSort->settingPage());
         // DEBUG
         connect(newLayer, &selectionItem::selected, this, [=](){
-            selectLayout(newSort);
+            selectLayer(newSort);
 
         });
         qDebug()<<"newSort:"<<newSort;
-        selectLayout(newSort);
+        selectLayer(newSort);
 
 
         connect(newSort, &MySort::nameChanged, this, [=](QString text){
@@ -371,7 +371,7 @@ void MainWindow::Init(){
             newLayer->setTitle(text);
         });
         connect(newSort, &MySort::descChanged, this, [=](QString text){this->canvasDesc->setText(text);newLayer->setDescription(text);});
-        connect(newSort, &MySort::setDel, this, [=](MySort * c){curSettingsPage->slideOut();deleteSort(c);layerSel->RemoveItem(newLayer);});
+        connect(newSort, &MySort::setDel, this, [=](MySort * c){curSettingsPage->slideOut();deleteLayer(c);layerSel->RemoveItem(newLayer);});
         sortNewPage->slideOut();
     });
 
@@ -399,13 +399,14 @@ void MainWindow::Init(){
     ui->displayLayout->setAlignment(Qt::AlignTop);
 }
 
+/*
 void MainWindow::selectGraph(MyCanvas *canvas){
     if(!curGraph){
         ui->displayLayout->removeWidget(defaultPage);
         defaultPage->hide();
         ui->displayLayout->addWidget(canvas);
         canvas->show();
-    }/*
+    }
     else{
         ui->displayLayout->removeWidget(curGraph);
         curGraph->hide();
@@ -418,29 +419,10 @@ void MainWindow::selectGraph(MyCanvas *canvas){
     canvasTitle->setText(curGraph->name());
     canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, canvasTitle->text()).width() + 10);
     canvasDesc->setText(curGraph->description());
-*/
-    else if(curGraph){
-            ui->displayLayout->removeWidget(curGraph);
-            curGraph->hide();
-
-    }else if(curSort){
-        ui->displayLayout->removeWidget(curSort);
-        curSort->hide();
-    }
-
-
-    // 新打开的是Graph
-//        if(strcmp(lyt->metaObject()->className(),"MyCanvas")==0){
-//            curGraph = qobject_cast<MyCanvas*>(lyt);
-//            curSort = nullptr;
-//            ui->displayLayout->addWidget(curGraph);
-//        }else if(strcmp(lyt->metaObject()->className(),"MySort")==0){
-//            curSort = qobject_cast<MySort*>(lyt);
-//            curGraph = nullptr;
-//            ui->displayLayout->addWidget(curSort);
-//        }
 }
+*/
 
+/*
 void MainWindow::deleteCanvas(MyCanvas *canvas){
     int index = graphList.indexOf(canvas);
     if(index < 0)
@@ -449,7 +431,7 @@ void MainWindow::deleteCanvas(MyCanvas *canvas){
     ui->displayLayout->removeWidget(curGraph);
     curGraph->hide();
     if(graphList.size() > 0){
-        selectGraph(graphList[0]);
+        selectLayer(graphList[0]);
     }
     else{
         ui->displayLayout->addWidget(defaultPage);
@@ -464,7 +446,9 @@ void MainWindow::deleteCanvas(MyCanvas *canvas){
     delete canvas;
     ui->mainWidget->update();
 }
+*/
 
+/*
 void MainWindow::selectSort(MySort *st)
 {
     if(!curSort){
@@ -485,7 +469,9 @@ void MainWindow::selectSort(MySort *st)
     canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, canvasTitle->text()).width() + 10);
     canvasDesc->setText(curSort->description());
 }
+*/
 
+/*
 void MainWindow::deleteSort(MySort *st)
 {
     int index = sortList.indexOf(st);
@@ -509,8 +495,9 @@ void MainWindow::deleteSort(MySort *st)
     delete st;
     ui->mainWidget->update();
 }
+*/
 
-void MainWindow::selectLayout(QWidget *lyr)
+void MainWindow::selectLayer(QWidget *lyr)
 {
     qDebug()<<"lyr:"<<lyr;
     if(!curGraph&&!curSort){
@@ -521,7 +508,6 @@ void MainWindow::selectLayout(QWidget *lyr)
     }else if(curGraph){
         ui->displayLayout->removeWidget(curGraph);
         curGraph->hide();
-
     }else if(curSort){
         ui->displayLayout->removeWidget(curSort);
         curSort->hide();
@@ -551,13 +537,52 @@ void MainWindow::selectLayout(QWidget *lyr)
     }
 }
 
-void MainWindow::selectLayout_(QWidget *x)
+void MainWindow::deleteLayer(QWidget *lyr)
 {
-    if(strcmp(x->metaObject()->className(),"QWidget")==0) qDebug()<<"QWidget";
-    if(strcmp(x->metaObject()->className(),"MyCanvas")==0) qDebug()<<"MyCanvas";
-    if(strcmp(x->metaObject()->className(),"MySort")==0) qDebug()<<"MySort";
+    if(strcmp(lyr->metaObject()->className(),"MyCanvas")==0){
+        MyCanvas *cur = qobject_cast<MyCanvas*>(lyr);
+        int index = graphList.indexOf(cur);
+        if(index < 0)
+            return;
+        graphList.erase(graphList.begin() + index);
+        ui->displayLayout->removeWidget(curGraph);
+        curGraph->hide();
+        pageList.erase(pageList.begin() + pageList.indexOf(cur->settingPage()));
+        if(graphList.size() > 0){
+            selectLayer(graphList[0]);
+        }else if(sortList.size() > 0){
+            selectLayer(sortList[sortList.size() - 1]);
+        }
+        delete cur;
+    }else if(strcmp(lyr->metaObject()->className(),"MySort")==0){
+        MySort *cur = qobject_cast<MySort*>(lyr);
+        int index = sortList.indexOf(cur);
+        if(index < 0)
+            return;
+        sortList.erase(sortList.begin() + index);
+        ui->displayLayout->removeWidget(curSort);
+        curSort->hide();
+        pageList.erase(pageList.begin() + pageList.indexOf(cur->settingPage()));
+        if(sortList.size() > 0){
+            selectLayer(sortList[0]);
+        }else if(graphList.size() > 0){
+            selectLayer(graphList[graphList.size() - 1]);
+        }
+        delete cur;
+    }
 
+    if(!sortList.size() && !graphList.size()){
+        ui->displayLayout->addWidget(defaultPage);
+        defaultPage->show();
+        curGraph = nullptr;
+        canvasTitle->setText("START");
+        canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, "START").width() + 10);
+        canvasDesc->setText("Add your first canvas to start");
+        curSettingsPage = defaultSettingsPage;
+    }
+    ui->mainWidget->update();
 }
+
 
 
 MainWindow::~MainWindow()
