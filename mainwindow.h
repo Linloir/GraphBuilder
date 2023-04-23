@@ -42,10 +42,6 @@ private:
     MyCanvas *curGraph = nullptr;
     MySort *curSort = nullptr;
 
-//    void selectGraph(MyCanvas *canvas);
-//    void selectSort(MySort *st);
-//    void deleteCanvas(MyCanvas *canvas);
-//    void deleteSort(MySort *st);
     void selectLayer(QWidget *lyr);
     void deleteLayer(QWidget *lyr);
     void Init();
