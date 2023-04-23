@@ -59,11 +59,6 @@ void MySort::CreateSettings(int r)
     QWidget * whiteSpace = new QWidget(this);
     whiteSpace->setFixedHeight(30);
 
-//    textButton * saveBtn = new textButton("Save to file", this);
-//    connect(saveBtn, &textButton::clicked, this, [=](){
-//        QString savePath = QFileDialog::getSaveFileName(this, tr("Save Visualizetion"), " ", tr("Map file(*.map)"));
-//        if(!savePath.isEmpty()) SaveToFile
-//    })
 
     textButton * delBtn = new textButton("Delete", "#0acb1b45","#1acb1b45","#2acb1b45", this);
     connect(delBtn, &textButton::clicked, this, [=](){emit setDel(this);});
@@ -142,11 +137,11 @@ void MySort::Init()
             QString v = num->value();
             int d = v.toInt();
             if(d == 0)
-                d = 50;
+                d = 20;
             else if (d > 80)
                 d = 80;
             return d;
-        }(), aniSpeed->value() + 9);
+        }(), aniSpeed->value() + 20);
     });
     connect(stopBtn, &textButton::clicked, this, [=](){
         sortCanvas->stop();

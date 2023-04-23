@@ -575,6 +575,7 @@ void MainWindow::deleteLayer(QWidget *lyr)
         ui->displayLayout->addWidget(defaultPage);
         defaultPage->show();
         curGraph = nullptr;
+        curSort = nullptr;
         canvasTitle->setText("START");
         canvasTitle->setMaximumWidth(QFontMetrics(QFont("Corbel Light", 24)).size(Qt::TextSingleLine, "START").width() + 10);
         canvasDesc->setText("Add your first canvas to start");
